@@ -1,4 +1,7 @@
 # glider_destruction_v2_Python3.py
+# gameoflifeboy, 6 October 2016
+# https://www.conwaylife.com/forums/viewtopic.php?p=36381#p36381
+#
 # Enter a pattern and this script will try to find a single-glider destruction of it.
 #
 # Recently added features:

@@ -1,4 +1,4 @@
-# lifewiki-rlescraper-v1.7.py
+# lifewiki-rlescraper-v1.8.py
 # Pretty much the only good thing about this code is that it works, and saves a
 #   considerable amount of admin time creating commented files for upload one by one.
 # The script does several things:
@@ -43,6 +43,7 @@
 #   comments section of new .cells files
 # Version 1.6 (15 Oct 2019) adds fixes for new MediaWiki version, auto-creates folders
 # Version 1.7 (16 Oct 2019) repairs a reporting bug re: synth #s from Catagolue/LifeWiki
+# Version 1.8 (6 Nov 2020) upgrades to Python 3.9, converting urllib bytes to string
 #
 # DONE:  add a check for {pname}_synth.rle,
 #        and create file for upload if not found in pattern collection
@@ -70,11 +71,11 @@
 #        the next time the script is run, and are used to make .cells files)
 
 import golly as g
-import urllib2
+import urllib.request
 import re
 import os
 
-samplepath = g.getstring("Enter path to generate .rle and .cells files","C:/users/{username}/Desktop/LW/")
+samplepath = g.getstring("Enter path to generate .rle and .cells files","C:/users/greedd/Desktop/LW/")
 if samplepath == "C:/users/{username}/Desktop/LW/":
   g.note("Please run this script again and change the sample path to something that works on your system.\n\n" \
        + "If the path you supply does not point to folders that you have permission to write to, " \
@@ -116,7 +117,7 @@ with open(synthfile,"r") as f:
       apgcode, coststr = line.replace('"','').split(',')
       if coststr[:9]=="100000000": coststr=coststr[1:]
       cost = int(coststr)
-      if cost == 999999999999999999L: cost = -1
+      if cost == 999999999999999999: cost = -1
       catapgcodes[apgcode]=cost    
   
 toobigpatternslist = ["0e0pmetacell","caterloopillar","caterpillar","centipede","centipede caterloopillar", \
@@ -145,6 +146,12 @@ def retrieveparam(article, param, s):
   regexstr = param+r'\s*=\s*(.*)$' #######################
   match = re.search(regexstr, s, re.MULTILINE)
   if match:
+    # pval = match.group(1)
+    # if pval[-1:]=="\n": pval = pval[:-1]
+    # # handle the case where newlines are not added before each pipe character
+    # pval += "|"
+    # g.note(pval + " :: " + pval[:pval.index("|")])
+    # return pval[:pval.index("|")]
     pval = match.group(1)+"|"
     return pval[:pval.index("|")] # handle the case where newlines are not added before each pipe character
   else:
@@ -165,8 +172,8 @@ def hasinfobox(s):
 ###############################################
 url = 'https://conwaylife.com/w/index.php?title=Special:AllPages&from=%24rats&hideredirects=1'
 linklist = [url]
-response = urllib2.urlopen(url)
-html = response.read()
+response = urllib.request.urlopen(url)
+html = response.read().decode()
 while 1:
    searchind1 = html.find('<div class="mw-allpages-nav">')
    searchind2 = html.find('<div class="mw-allpages-body">')
@@ -178,8 +185,8 @@ while 1:
    newurl = newurl.replace("&amp;","&")
    linklist+=[newurl]
    g.show("Retrieving " + newurl)
-   response = urllib2.urlopen(newurl)
-   html = response.read()
+   response = urllib.request.urlopen(newurl)
+   html = str(response.read())
    if len(linklist)>10: break
 
 # follow each link, retrieve the page of links
@@ -188,8 +195,8 @@ while 1:
 articlelist = []
 for url in linklist: ##############################################
   g.show("Retrieving " + url)
-  response = urllib2.urlopen(url)
-  html = response.read()
+  response = urllib.request.urlopen(url)
+  html = response.read().decode()
   beginindex = html.find('<ul class="mw-allpages-chunk">') 
   endindex = html.find('<div class="printfooter">')
   if beginindex>-1:
@@ -230,9 +237,9 @@ with open(rlefolder + "rledata.csv","w") as f:
       continue
     articlename = item[6:]
     url = 'http://conwaylife.com/w/index.php?title=' + articlename + '&action=edit'
-    response = urllib2.urlopen(url)
+    response = urllib.request.urlopen(url)
     g.show("Checking " + url)
-    html = response.read()
+    html = response.read().decode()
     begintext = html.find('wpTextbox1">')
     if begintext<0:
       g.note("Could not find article text textbox 'wpTextbox1' in HTML for " + articlename + ".")
@@ -304,7 +311,7 @@ with open(rlefolder + "rledata.csv","w") as f:
         location = "embedded"
         discoverer=""
         discoveryear=""
-      pname = retrieveparam(articlename, "pname",html)
+      pname = retrieveparam(articlename, "pname", html)
       if pname.lower() != pname:
         if pname not in shouldbecapitalized:
           capitalizedpnames += [pname]
@@ -322,7 +329,7 @@ with open(rlefolder + "rledata.csv","w") as f:
 missing, missingsynth, missingcells, toobigforcells = [], [], [], []
 count = 0
 # g.note("Starting check of pnames")
-for item in sorted(pnamedict.iterkeys()):
+for item in sorted(pnamedict.keys()):
   count +=1
   g.show("Checking pname '" + item + "'")
   g.update()
@@ -336,8 +343,8 @@ for item in sorted(pnamedict.iterkeys()):
   sourceurl = data[0]
   articlename = sourceurl.replace("http://conwaylife.com/w/index.php?title=","").replace("&action=edit","")
   url = 'http://conwaylife.com/wiki/' + articlename
-  response = urllib2.urlopen(url)
-  html = response.read()
+  response = urllib.request.urlopen(url)
+  html = response.read().decode()
   if html=="":
     g.note("Problem with article " + articlename + ":\n" + str(pnamedict[item]))
     continue
@@ -346,8 +353,8 @@ for item in sorted(pnamedict.iterkeys()):
   url = 'http://www.conwaylife.com/patterns/' + item + ".rle"
   width, height = 999999, 999999
   try:
-    response = urllib2.urlopen(url)
-    html = response.read()
+    response = urllib.request.urlopen(url)
+    html = response.read().decode()
     match = re.search(r'x\s*=\s*([0-9]*),\s*y\s*=\s*([0-9]*)', html)
     if match:
       width = int(match.group(1))
@@ -389,8 +396,8 @@ for item in sorted(pnamedict.iterkeys()):
   # check for an uploaded {pname}_synth.rle  
   url = 'http://www.conwaylife.com/patterns/' + item + "_synth.rle"
   try:
-    response = urllib2.urlopen(url)
-    html = response.read()
+    response = urllib.request.urlopen(url)
+    html = response.read().decode()
     # g.note(html[:500])
   except Exception as e:
     if str(e) == "HTTP Error 404: Not Found":
@@ -404,8 +411,8 @@ for item in sorted(pnamedict.iterkeys()):
   # check for an uploaded {pname}.cells  
   url = 'http://www.conwaylife.com/patterns/' + item + ".cells"
   try:
-    response = urllib2.urlopen(url)
-    html = response.read()
+    response = urllib.request.urlopen(url)
+    html = response.read().decode()
     # g.note(html[:500])
   except Exception as e:
     if str(e) == "HTTP Error 404: Not Found":
@@ -440,7 +447,7 @@ for item in sorted(pnamedict.iterkeys()):
           toobigforcells += [item]
           # remove from the list of articles that could have cells files but don't
           if item in noplaintextparam:
-	      noplaintextparam.pop(item,"Default value. Means if item is not there, I don't care, don't want error.")
+            noplaintextparam.pop(item,"Default value. Means if item is not there, I don't care, don't want error.")
     else:
       pass     # g.note(str(e) + " for cells pname " + item) ##########################################
 
@@ -451,8 +458,8 @@ s=""  # cumulative error report
 for pname in missing:
   url = 'http://conwaylife.com/w/index.php?title=RLE:' + pname + '&action=edit'
   try:
-    response = urllib2.urlopen(url)
-    html = response.read()
+    response = urllib.request.urlopen(url)
+    html = response.read().decode()
   except:
     s+="\n" + url + "\n"+pname+":  Not Found (or other) error"
   if html.find('name="wpTextbox1">')==-1:
@@ -486,8 +493,8 @@ for pname in missing:
 for pname in missingsynth:
   url = 'http://conwaylife.com/w/index.php?title=RLE:' + pname + '_synth&action=edit'
   try:
-    response = urllib2.urlopen(url)
-    html = response.read()
+    response = urllib.request.urlopen(url)
+    html = response.read().decode()
   except:
     # s+="\n" + url + "\n"+pname+":  Not Found (or other) error"
     continue  # for syntheses this is pretty normal, no need to mention it

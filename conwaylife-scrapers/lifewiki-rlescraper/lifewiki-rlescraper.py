@@ -1,4 +1,4 @@
-# lifewiki-rlescraper-v1.8.py
+# lifewiki-rlescraper-v1.9.py
 # Pretty much the only good thing about this code is that it works, and saves a
 #   considerable amount of admin time creating commented files for upload one by one.
 # The script does several things:
@@ -44,6 +44,9 @@
 # Version 1.6 (15 Oct 2019) adds fixes for new MediaWiki version, auto-creates folders
 # Version 1.7 (16 Oct 2019) repairs a reporting bug re: synth #s from Catagolue/LifeWiki
 # Version 1.8 (6 Nov 2020) upgrades to Python 3.9, converting urllib bytes to string
+# Version 1.9 (1 June 2021) handles some new syntax that people have thought of doing
+#                           in LifeWiki articles, with spaces after pnames or multiple
+#                           EmbedViewer templates in tables, all on one line of text
 #
 # DONE:  add a check for {pname}_synth.rle,
 #        and create file for upload if not found in pattern collection
@@ -75,7 +78,7 @@ import urllib.request
 import re
 import os
 
-samplepath = g.getstring("Enter path to generate .rle and .cells files","C:/users/greedd/Desktop/LW/")
+samplepath = g.getstring("Enter path to generate .rle and .cells files","C:/users/{username}/Desktop/LW/")
 if samplepath == "C:/users/{username}/Desktop/LW/":
   g.note("Please run this script again and change the sample path to something that works on your system.\n\n" \
        + "If the path you supply does not point to folders that you have permission to write to, " \
@@ -152,8 +155,15 @@ def retrieveparam(article, param, s):
     # pval += "|"
     # g.note(pval + " :: " + pval[:pval.index("|")])
     # return pval[:pval.index("|")]
-    pval = match.group(1)+"|"
-    return pval[:pval.index("|")] # handle the case where newlines are not added before each pipe character
+    
+    # try to fix problem with multiple EmbedViewers on one line and pname as last parameter, as in Density article
+    grp = match.group(1)
+    if grp.find("}")>-1:
+      pval = grp[:grp.find("}")]+"|"
+    else:
+      pval = grp+"|"
+    
+    return pval[:pval.index("|")].strip()
   else:
     g.note("Could not find definition of parameter '"+param+"' in article '"+article+"'.")
     g.setclipstr(s)

@@ -9,7 +9,10 @@ Test walkthrough:
   No need to specify ticks to run or match type --
   that's only if you want to recognize something non-oscillatory,
   like all the phases of a pi explosion or something like that.
-  The optional *matchtype* parameter defaults to 0,
+  Another example is that *glider* is defined in the library with maxticks = 1,
+  because if you have the 0 and 1 phases of a glider,
+  you can recognize (some rotation or reflection of) any glider you might encounter.
+* The optional *matchtype* parameter defaults to 0,
   meaning it will recognize any orientation of a pattern;
   other possible values of matchtype are 1 (no rot/ref) or 4 (rotation only)
 * Run recognizer1.3.py.  Now your new modified pattern will be recognized successfully.

@@ -1,4 +1,4 @@
-# lifewiki-rlescraper-v1.9.py
+# lifewiki-rlescraper-v2.0.py
 # Pretty much the only good thing about this code is that it works, and saves a
 #   considerable amount of admin time creating commented files for upload one by one.
 # The script does several things:
@@ -47,6 +47,10 @@
 # Version 1.9 (1 June 2021) handles some new syntax that people have thought of doing
 #                           in LifeWiki articles, with spaces after pnames or multiple
 #                           EmbedViewer templates in tables, all on one line of text
+#                           Also switched http:// to https: -- looks like that matters
+#                           in cases like http://www.conwaylife.com/patterns/beethoven.cells
+# Version 2.0 (7 Sept 2021) switch "http://" to "https://" everywhere,
+#                           mention LifeHistory/multistate case where no .cells is created
 #
 # DONE:  add a check for {pname}_synth.rle,
 #        and create file for upload if not found in pattern collection
@@ -246,7 +250,7 @@ with open(rlefolder + "rledata.csv","w") as f:
       g.note("Weird article link: " +item)
       continue
     articlename = item[6:]
-    url = 'http://conwaylife.com/w/index.php?title=' + articlename + '&action=edit'
+    url = 'https://conwaylife.com/w/index.php?title=' + articlename + '&action=edit'
     response = urllib.request.urlopen(url)
     g.show("Checking " + url)
     html = response.read().decode()
@@ -351,8 +355,8 @@ for item in sorted(pnamedict.keys()):
     else:
       data = dtemp # not worrying about weird unusual cases like duoplet / diagonal on-off, just take first infobox.
   sourceurl = data[0]
-  articlename = sourceurl.replace("http://conwaylife.com/w/index.php?title=","").replace("&action=edit","")
-  url = 'http://conwaylife.com/wiki/' + articlename
+  articlename = sourceurl.replace("https://conwaylife.com/w/index.php?title=","").replace("&action=edit","")
+  url = 'https://conwaylife.com/wiki/' + articlename
   response = urllib.request.urlopen(url)
   html = response.read().decode()
   if html=="":
@@ -360,7 +364,7 @@ for item in sorted(pnamedict.keys()):
     continue
     # g.exit(articlename + " problem")
   
-  url = 'http://www.conwaylife.com/patterns/' + item + ".rle"
+  url = 'https://www.conwaylife.com/patterns/' + item + ".rle"
   width, height = 999999, 999999
   try:
     response = urllib.request.urlopen(url)
@@ -404,7 +408,7 @@ for item in sorted(pnamedict.keys()):
       g.note(str(e) + " for rle pname " + item)
 
   # check for an uploaded {pname}_synth.rle  
-  url = 'http://www.conwaylife.com/patterns/' + item + "_synth.rle"
+  url = 'https://www.conwaylife.com/patterns/' + item + "_synth.rle"
   try:
     response = urllib.request.urlopen(url)
     html = response.read().decode()
@@ -419,7 +423,7 @@ for item in sorted(pnamedict.keys()):
       g.note(str(e) + " for synth pname " + item)
 
   # check for an uploaded {pname}.cells  
-  url = 'http://www.conwaylife.com/patterns/' + item + ".cells"
+  url = 'https://www.conwaylife.com/patterns/' + item + ".cells"
   try:
     response = urllib.request.urlopen(url)
     html = response.read().decode()
@@ -466,7 +470,7 @@ for item in sorted(pnamedict.keys()):
 #####################################################
 s=""  # cumulative error report
 for pname in missing:
-  url = 'http://conwaylife.com/w/index.php?title=RLE:' + pname + '&action=edit'
+  url = 'https://conwaylife.com/w/index.php?title=RLE:' + pname + '&action=edit'
   try:
     response = urllib.request.urlopen(url)
     html = response.read().decode()
@@ -482,9 +486,9 @@ for pname in missing:
     data = pnamedict[pname]
     discoverer, discoveryear = data[2], data[3]
     sourceurl = data[0]
-    articlename = sourceurl.replace("http://conwaylife.com/w/index.php?title=","").replace("&action=edit","")
-    url = 'http://conwaylife.com/wiki/' + articlename
-    paturl = 'http://www.conwaylife.com/patterns/' + pname + ".rle"
+    articlename = sourceurl.replace("https://conwaylife.com/w/index.php?title=","").replace("&action=edit","")
+    url = 'https://conwaylife.com/wiki/' + articlename
+    paturl = 'https://www.conwaylife.com/patterns/' + pname + ".rle"
     with open(filename, 'w') as f:
       f.write("#N "+pname+".rle\n")
       if discoverer!="":
@@ -501,7 +505,7 @@ for pname in missing:
 #   but can not be found on the server
 ##########################################################
 for pname in missingsynth:
-  url = 'http://conwaylife.com/w/index.php?title=RLE:' + pname + '_synth&action=edit'
+  url = 'https://conwaylife.com/w/index.php?title=RLE:' + pname + '_synth&action=edit'
   try:
     response = urllib.request.urlopen(url)
     html = response.read().decode()
@@ -518,9 +522,9 @@ for pname in missingsynth:
     data = pnamedict[pname]
     discoverer, discoveryear = data[2], data[3]
     sourceurl = data[0]
-    articlename = sourceurl.replace("http://conwaylife.com/w/index.php?title=","").replace("&action=edit","")
-    url = 'http://conwaylife.com/wiki/' + articlename
-    paturl = 'http://www.conwaylife.com/patterns/' + pname + "_synth.rle"
+    articlename = sourceurl.replace("https://conwaylife.com/w/index.php?title=","").replace("&action=edit","")
+    url = 'https://conwaylife.com/wiki/' + articlename
+    paturl = 'https://www.conwaylife.com/patterns/' + pname + "_synth.rle"
     with open(filename, 'w') as f:
       f.write("#N "+pname+"_synth.rle\n")
       f.write("#C " + url + "\n")
@@ -529,7 +533,7 @@ for pname in missingsynth:
     g.show("Wrote " + filename)
 
 g.note("Done!  Click OK to write exceptions to clipboard.")
-g.setclipstr(s + "\nCells files created: " + str(missingcells) + "\nPatterns too big to create cells files: " + str(toobigforcells) \
+g.setclipstr(s + "\nCells files created: " + str(missingcells) + "\nPatterns too big to create cells files, or multistate: " + str(toobigforcells) \
                + "\nIllegal capitalized pnames: " + str(capitalizedpnames) + "\npnames with no RLE header: " + str(noRLEheader) \
                + "\nNo RLE param in infobox: " + str(norleparam) + "\nNo plaintext param in infobox: " + str(noplaintextparam) \
                + "\napgcodes where LifeWiki synth agrees with Catagolue: " + str(apgcodesLWsynthagreeswithC) \

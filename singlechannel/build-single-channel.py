@@ -1,4 +1,5 @@
-# build-single-channel.py, version 3.0
+# build-single-channel.py, version 3.1
+# update from 3.0 16 December 2021: change division operator to work in Python3
 
 import golly as g 
 
@@ -11,7 +12,7 @@ def makerecipe(recipe):
   totaltime=0
   for i in recipe[1:]:
     totaltime+=i
-    g.putcells(g.transform(gliderlist[totaltime%4],totaltime/4,totaltime/4))
+    g.putcells(g.transform(gliderlist[totaltime%4],totaltime//4,totaltime//4))
     g.show(str(totaltime))
 
 # sample combined recipe

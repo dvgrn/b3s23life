@@ -1,0 +1,237 @@
+<HTML><HEAD><TITLE>
+Conway's game of life - Corderships and switch engines
+</TITLE></HEAD><BODY background="bground.PNG">
+<TABLE><TR><TD bgcolor="white">
+<FONT size="6">Conway's</FONT><BR>
+<IMG SRC="title.png" alt="Game of Life"><BR>
+</TD></TR></TABLE>
+<H2>Corderships and switch engines</H2>
+<H3>Contents</H3>
+<UL>
+<LI><A HREF="#sect0">Before the switch engine</A></LI>
+<LI><A HREF="#sect1">The discovery of the switch engine</A></LI>
+<LI><A HREF="#sect2">Corderships</A></LI>
+<LI><A HREF="#sect3">Corderguns</A></LI>
+<LI><A HREF="#sect4">Swimmers</A></LI>
+<LI><A HREF="#sect5">Quadratic growth patterns</A></LI>
+<LI><A HREF="#sect6">Puffers and rakes</A></LI>
+</UL><BR><BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<h3><A NAME="sect0">Before the switch engine</A>
+ <A HREF="#sect1"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+When Life was first published in October 1970, people tried<BR>
+to make infinite-growth patterns, ones that grow without<BR>
+limit. Conway realised that there are two ways that such a<BR>
+pattern can grow:<BR>
+<BR>
+Moving source - This encompasses puffers and rakes<BR>
+Stationary source - These are guns and slide guns<BR>
+<BR>
+The first infinite growth pattern was made by Bill Gosper,<BR>
+and it was a gun (a stationary object that emits gliders).<BR>
+This particular example emits one glider every 30 gens:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00000.rle">
+<IMG SRC="corder_patterns/img00000.png"></A><BR><BR>
+<BR>
+Later, a puffer train (moving object that emits debris)<BR>
+was found. It moves at c/2 and has a period-140 output:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00001.rle">
+<IMG SRC="corder_patterns/img00001.png"></A><BR><BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect0"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect1">The discovery of the switch engine</A>
+ <A HREF="#sect2"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+<BR>
+However, a much smaller, simpler puffer train exists.<BR>
+It is completely different to anything else, and is<BR>
+called the switch engine. It exists in two different<BR>
+forms, both of which are known to occur naturally:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00002.rle">
+<IMG SRC="corder_patterns/img00002.png"></A><BR><BR>
+<BR>
+It was discovered by Charles Corderman. The computer he<BR>
+used to find it was an unusual hybrid computer, the only one<BR>
+of its kind. He did a systematic search for all polyominos<BR>
+(patterns consisting of orthogonally-connected cells). When<BR>
+running a particular decomino (10-cell polyomino), he noticed<BR>
+something strange. The pattern appeared to create itself<BR>
+again, 48 generations later, whilst leaving debris. After<BR>
+another 48 generations, the pattern is returned to its<BR>
+original orientation, translated 8 cells diagonally.<BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect1"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect2">Corderships</A>
+ <A HREF="#sect3"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+What if these switch engines could mutually stabilise<BR>
+each other to leave no material behind? That is exactly<BR>
+what Dean Hickerson did when he created the first<BR>
+Cordership, which had 13 switch engines. This was soon<BR>
+optimised to 10:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00003.rle">
+<IMG SRC="corder_patterns/img00003.png"></A><BR><BR>
+<BR>
+An improved Cordership was built using a similar method.<BR>
+This one only requires 7 switch engines:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00004.rle">
+<IMG SRC="corder_patterns/img00004.png"></A><BR><BR>
+<BR>
+A 6-engine Cordership with an interesting termination<BR>
+was built:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00005.rle">
+<IMG SRC="corder_patterns/img00005.png"></A><BR><BR>
+<BR>
+<h3><A HREF="#sect2"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect3">Corderguns</A>
+ <A HREF="#sect4"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+<BR>
+This can be synthesised repeatedly using a gun, but the<BR>
+resulting gun is extremely large. It operates at p784:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00006.rle">
+<IMG SRC="corder_patterns/img00006.png"></A><BR><BR>
+<BR>
+Much more recently, in 2004, Paul Tooke built a Cordership<BR>
+using only 3 switch engines:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00007.rle">
+<IMG SRC="corder_patterns/img00007.png"></A><BR><BR>
+<BR>
+This one can be synthesised much more easily, at p690:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00008.rle">
+<IMG SRC="corder_patterns/img00008.png"></A><BR><BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect3"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect4">Swimmers</A>
+ <A HREF="#sect5"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+<BR>
+A switch engine can travel through a lane made of boats.<BR>
+This is called a swimmer track, as the switch engine appears<BR>
+to &quot;swim&quot; down it at the slow speed of c/12. The following<BR>
+oscillator was made by David Bell in June 2005:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00009.rle">
+<IMG SRC="corder_patterns/img00009.png"></A><BR><BR>
+<BR>
+Dave Greene built a stable device that can convert a Herschel<BR>
+into a swimmer and back. He made a mistake in the construction,<BR>
+so he had to bolt an extra track on. It still works, but is<BR>
+reduced to a minimum compression of 629 ticks (generations):<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00010.rle">
+<IMG SRC="corder_patterns/img00010.png"></A><BR><BR>
+<BR>
+A Cordership can be quickly transformed into two swimmers.<BR>
+The following pattern demonstrates this:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00011.rle">
+<IMG SRC="corder_patterns/img00011.png"></A><BR><BR>
+<BR>
+In 2009 I built a converter to turn a single glider<BR>
+into a Cordership. You can read about it on this page:<BR>
+<BR>
+<A HREF="http://b3s23life.blogspot.com/2009/02/first-complete-glider-to-cordership.html">http://b3s23life.blogspot.com/2009/02/first-complete-glider-to-cordership.html</A><BR>
+<BR>
+<h3><A HREF="#sect4"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect5">Quadratic growth patterns</A>
+ <A HREF="#sect6"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+<BR>
+The switch engine, since it occurs naturally, can be incorporated<BR>
+into a quadratic growth pattern. Such a pattern would synthesise<BR>
+a block-laying or glider-producing switch engine at a regular rate.<BR>
+One notable example consists of just 38 cells (by Mitchell Riley):<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00012.rle">
+<IMG SRC="corder_patterns/img00012.png"></A><BR><BR>
+<BR>
+It produces a switch engine every 140 generations (notice the<BR>
+similarity with the puffer train mentioned at the start of<BR>
+this article).<BR>
+<BR>
+A more traditional breeder that synthesises switch engines uses<BR>
+glider collisions. This was the method used in the very first<BR>
+quadratic growth pattern, made by Bill Gosper. Whereas his<BR>
+design spawned copies of his gun, the switch engine breeder<BR>
+creates switch engines periodically. This example was built<BR>
+in 1997 by Helmut Postl:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00013.rle">
+<IMG SRC="corder_patterns/img00013.png"></A><BR><BR>
+<BR>
+It fills space more densely than Riley's breeder, synthesising<BR>
+a switch engine every 80 (instead of 140) generations.<BR>
+<BR>
+The smallest (in terms of bounding box) quadratic growth pattern<BR>
+does not rely on the switch engine, but instead stretches a<BR>
+uniform agar. It is unimaginatively called the spacefiller:<BR>
+<BR>
+<BR><A HREF="corder_patterns/pic00014.lif">
+<IMG SRC="corder_patterns/img00014.png"></A><BR><BR>
+Switch engine technology is not restricted to linear and<BR>
+quadratic growth. Other growth rates are possible, such<BR>
+as Bill Gosper's linear-logarithmic growth pattern.<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00015.rle">
+<IMG SRC="corder_patterns/img00015.png"></A><BR><BR>
+<BR>
+The pattern is very slow, so I suggest using a very<BR>
+powerful program to run it. Personally I would reccomend<BR>
+Golly, but Hashlife is equally equipped to simulate it.<BR>
+<BR>
+<h3><A HREF="#sect5"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect6">Puffers and rakes</A>
+ <A HREF="#sect7"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+<BR>
+Corderships can be used to build diagonal puffers and<BR>
+rakes. These are moving objects that leave behind<BR>
+other objects. A simple example is this puffer which<BR>
+builds heavyweight switch engines:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00016.rle">
+<IMG SRC="corder_patterns/img00016.png"></A><BR><BR>
+<BR>
+LWSS and MWSS rakes can be made using a different<BR>
+method:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00017.rle">
+<IMG SRC="corder_patterns/img00017.png"></A><BR><BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00018.rle">
+<IMG SRC="corder_patterns/img00018.png"></A><BR><BR>
+<BR>
+Standard spaceships aren't the only things that can<BR>
+be built. A more complex construction generates switch<BR>
+engines, resulting in another quadratic-growth pattern:<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00019.rle">
+<IMG SRC="corder_patterns/img00019.png"></A><BR><BR>
+<BR>
+And taking the idea one step further, David Bell has<BR>
+built an arrangement of Corderships which synthesises<BR>
+more Corderships, travelling perpendicular to the<BR>
+rake.<BR>
+<BR>
+<BR><A HREF="corder_patterns/rle00020.rle">
+<IMG SRC="corder_patterns/img00020.png"></A><BR><BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>By Calcyman<BR>
+<A HREF="index.htm">Back to home page</A><BR>
+<A HREF="mailto:calcyman@tiscali.co.uk">E-mail me</A><BR>
+<BR>
+<!-- File conversion by lifeconv - By Calcyman
+21 patterns and 2267 lines converted in 33 seconds. -->
+</BODY></HTML>
+

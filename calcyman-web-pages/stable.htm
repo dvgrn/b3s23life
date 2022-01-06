@@ -1,0 +1,867 @@
+<HTML><HEAD><TITLE>
+Conway's game of life - Stable technology
+</TITLE></HEAD><BODY background="bground.PNG">
+<TABLE><TR><TD bgcolor="white">
+<FONT size="6">Conway's</FONT><BR>
+<IMG SRC="title.png" alt="Game of Life"><BR>
+</TD></TR></TABLE>
+<H2>Stable technology</H2>
+<H3>Contents</H3>
+<UL>
+<LI><A HREF="#sect0">Introduction</A></LI>
+<LI><A HREF="#sect1">The Herschel</A></LI>
+<LI><A HREF="#sect2">The Machine Gun</A></LI>
+<LI><A HREF="#sect3">Herschel-based tracks</A></LI>
+<LI><A HREF="#sect4">Stable reflectors</A></LI>
+<LI><A HREF="#sect5">The Boojum reflector</A></LI>
+<LI><A HREF="#sect6">The Rectifier</A></LI>
+<LI><A HREF="#sect7">The $100 question</A></LI>
+<LI><A HREF="#sect8">Stable Converters</A></LI>
+<LI><A HREF="#sect9">Logic Gates</A></LI>
+<LI><A HREF="#sect10">Asynchronous logic gates</A></LI>
+<LI><A HREF="#sect11">Stable computers</A></LI>
+<LI><A HREF="#sect12">The Universal Constructor</A></LI>
+<LI><A HREF="#sect13">Replicators</A></LI>
+<LI><A HREF="#sect14">Metapixels</A></LI>
+<LI><A HREF="#sect15">Display Devices</A></LI>
+<LI><A HREF="#sect16">Emus</A></LI>
+<LI><A HREF="#sect17">Quetzals</A></LI>
+</UL><BR><BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<h3><A NAME="sect0">Introduction</A>
+ <A HREF="#sect1"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+Technology in Life usually falls into two main categories:<BR>
+stable and periodic. Periodic technology has been known<BR>
+since 1970 with Gosper's glider gun. Stable technology<BR>
+didn't fully emerge until 1996, but then a great discovery<BR>
+in 2001 allowed lots of new devices to be built. In this<BR>
+article I will explain the history of stable technology,<BR>
+as well as some of the machines that have been built based<BR>
+on it.<BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect0"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect1">The Herschel</A>
+ <A HREF="#sect2"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+The Herschel is a small object in life that consists<BR>
+of seven live cells. It forms naturally, and eventually<BR>
+burns out into two gliders, two blocks and one ship.<BR>
+However, it can be perturbed by catalysts to alter its<BR>
+evolution.<BR>
+<BR>
+It is produced (along with a block) as the 20th generation<BR>
+in the evolution of the B-heptomino, a common arrangement<BR>
+of cells that lasts for around 150 generations before<BR>
+stabilising. This shows the evolution from B-heptomino to<BR>
+Herschel.<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00000.rle">
+<IMG SRC="stable_patterns/img00000.png"></A><BR><BR>
+<BR>
+The Herschel naturally emits a glider shortly after the<BR>
+standard phase depicted above. If the Herschel could be<BR>
+re-routed back to its original position, it could be made<BR>
+to periodically emit gliders. The first conduit (pattern<BR>
+that perturbs a Herschel into producing another Herschel<BR>
+at a different location/orientation) is the 64-generation<BR>
+right-turn conduit shown below:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00001.rle">
+<IMG SRC="stable_patterns/img00001.png"></A><BR><BR>
+<BR>
+The green Herschel represents the input, the red Herschel<BR>
+represents the output and the black catalysts form the<BR>
+permanent part of the conduit. This is a very basic conduit,<BR>
+as well as being the first one discovered (by David J.<BR>
+Buckingham). Since the conduit simply performs a 90° rotation,<BR>
+4 copies of the device can be combined to yield an oscillator.<BR>
+Furthermore, the Herschel emits a glider, which is not eaten,<BR>
+allowing it to escape cleanly. This means that the device is<BR>
+not simply an oscillator, but a gun. It operates at p256, and<BR>
+is nicknamed &quot;The Machine Gun&quot;.<BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect1"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect2">The Machine Gun</A>
+ <A HREF="#sect3"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+This pattern was created in 1995, again by David Buckingham.<BR>
+Here is the pattern represented as RLE (run-length-encoded)<BR>
+format. This can be read by most Life programs:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00002.rle">
+<IMG SRC="stable_patterns/img00002.png"></A><BR><BR>
+<BR>
+<BR>
+Buckingham later discovered 7 additional conduits, and since<BR>
+then another 8 have been found independently. These can be<BR>
+used to make other guns, for example the P448 gun below:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00003.rle">
+<IMG SRC="stable_patterns/img00003.png"></A><BR><BR>
+<BR>
+Guns with all periods equal to or greater than 62 can be made<BR>
+from these stable conduits, and a few others below that period<BR>
+can be made by using periodic components.<BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect2"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect3">Herschel-based tracks</A>
+ <A HREF="#sect4"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+Here I will show several of the conduits that can perturb a<BR>
+Herschel cleanly to produce another Herschel (and in most cases<BR>
+surplus gliders). The F171 is one of the more interesting<BR>
+examples, as it is made out of just one component. It was<BR>
+discovered by Brice Due in 2007 using a search program.<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00004.rle">
+<IMG SRC="stable_patterns/img00004.png"></A><BR><BR>
+<BR>
+The Fx176 conduit has two distinct sections, with an<BR>
+intermediate pi-heptomino stage:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00005.rle">
+<IMG SRC="stable_patterns/img00005.png"></A><BR><BR>
+<BR>
+The following conduit is peculiar in that it uses a catalyst<BR>
+block in two completely dissimilar ways. The first time it<BR>
+simply deflects the chaos, and the second time it is absorbed<BR>
+and re-created in its original position.<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00006.rle">
+<IMG SRC="stable_patterns/img00006.png"></A><BR><BR>
+<BR>
+Note the large catalyst at the top-right. This is called an<BR>
+eater2, and is extremely versatile. It can absorb a glider on<BR>
+any of four adjacent paths!<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00007.rle">
+<IMG SRC="stable_patterns/img00007.png"></A><BR><BR>
+<BR>
+The smallest conduit is the Fx119 forward flip. The catalysis<BR>
+is done completely on one side of the Herschel, and this conduit<BR>
+fits into awkward places where none of the others can do. It is<BR>
+also the basis of an incredible edge-shooting device.<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00008.rle">
+<IMG SRC="stable_patterns/img00008.png"></A><BR><BR>
+<BR>
+This short Herschel track, made of two Fx77 flips, can be used as<BR>
+a basic toggle switch. This makes it useful for constructing more<BR>
+complex logic gates and computational devices.<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00009.rle">
+<IMG SRC="stable_patterns/img00009.png"></A><BR><BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect3"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect4">Stable reflectors</A>
+ <A HREF="#sect5"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+Even more useful than a stable Herschel conduit would be a stable<BR>
+glider reflector. This could be used to rephase, position and<BR>
+orientate gliders, without needing to oscillate. The first attempt<BR>
+at finding a stable reflector didn't succeed, but it did result<BR>
+in an equally impressive device - a stable glider RS flip-flop.<BR>
+This can be used to store a bit of information, so a memory unit<BR>
+could be built from them. Here is the device: (by Paul Callahan)<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00010.rle">
+<IMG SRC="stable_patterns/img00010.png"></A><BR><BR>
+<BR>
+Fortunately, Buckingham's Herschel conduits can help. Paul<BR>
+Callahan found the following reaction, where a glider is<BR>
+converted into some chaotic mess, creating a surplus beehive.<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00011.rle">
+<IMG SRC="stable_patterns/img00011.png"></A><BR><BR>
+<BR>
+But what use is that mess? None in its current state, but it<BR>
+can be perturbed by two blocks to form an R-pentomino.<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00012.rle">
+<IMG SRC="stable_patterns/img00012.png"></A><BR><BR>
+<BR>
+An R-pentomino naturally forms a b-heptomino, plus some mess<BR>
+that reacts with it. Fortunately, a boat can remove the mess,<BR>
+allowing the useful B-heptomino to escape.<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00013.rle">
+<IMG SRC="stable_patterns/img00013.png"></A><BR><BR>
+<BR>
+The transparent block reaction can be used to transform a<BR>
+B-heptomino into a clean Herschel, without leaving any blocks<BR>
+behind. This is done with the help of a snake or eater.<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00014.rle">
+<IMG SRC="stable_patterns/img00014.png"></A><BR><BR>
+<BR>
+The entire conduit is shown below:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00015.rle">
+<IMG SRC="stable_patterns/img00015.png"></A><BR><BR>
+<BR>
+Now that we can produce a Herschel, maybe it can be re-routed<BR>
+to delete the annoying beehive. Paul Callahan demonstrated<BR>
+this in 1996, when he built the first stable reflector:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00016.rle">
+<IMG SRC="stable_patterns/img00016.png"></A><BR><BR>
+<BR>
+It is very large, and very slow. It takes a total of 4840 ticks<BR>
+before it is able to accept another glider. It still works, but<BR>
+at its current size it won't be very useful. Callahan soon<BR>
+managed to optimise it:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00017.rle">
+<IMG SRC="stable_patterns/img00017.png"></A><BR><BR>
+<BR>
+He improved yet again, by using Buckingham's conduits more<BR>
+imaginatively. This time he knocked the repeat time down to just<BR>
+894 ticks. (October 1996)<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00018.rle">
+<IMG SRC="stable_patterns/img00018.png"></A><BR><BR>
+<BR>
+Later he managed to optimise it further, producing a repeat time<BR>
+of 850 ticks. Dean Hickerson made the next great leap, when he<BR>
+used a custom still-life to allow a tighter compression of the<BR>
+conduits. This improved it to 747 ticks: (November 1996)<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00019.rle">
+<IMG SRC="stable_patterns/img00019.png"></A><BR><BR>
+<BR>
+David Buckingham used a different initial reaction based on a<BR>
+glider hitting a boat. This produced a reflector that is dis-<BR>
+similar to all of the previous ones. (May 1997)<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00020.rle">
+<IMG SRC="stable_patterns/img00020.png"></A><BR><BR>
+<BR>
+As you've seen, the initial sequence of the previous reflectors<BR>
+is composed of four main sections:<BR>
+<BR>
+Stage 0: glider -&gt; mess+beehive<BR>
+Stage 1: mess -&gt; R-pentomino<BR>
+Stage 2: R-pentomino -&gt; B-heptomino<BR>
+Stage 3: B-heptomino -&gt; Herschel<BR>
+<BR>
+Stephen Silver found an interesting way of combining stages 2 and<BR>
+3 of the initial sequence, making a fast R-pentomino -&gt; Herschel<BR>
+converter. Here is the converter, showing the input and output:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00021.rle">
+<IMG SRC="stable_patterns/img00021.png"></A><BR><BR>
+<BR>
+The converter can be used to make an improved stable reflector,<BR>
+with a recovery time of 623 (October 1997). This is fast, but it<BR>
+can still be improved. This is the complete reflector in RLE format:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00022.rle">
+<IMG SRC="stable_patterns/img00022.png"></A><BR><BR>
+<BR>
+In November 1998, Paul Callahan managed to combine all four stages of<BR>
+the initial sequence into just one direct conduit:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00023.rle">
+<IMG SRC="stable_patterns/img00023.png"></A><BR><BR>
+<BR>
+This lead to him breaking the record again, with a stable reflector<BR>
+with a recovery time of 575 ticks. It has a direct Herschel output,<BR>
+which is turned into a glider on the edge of the pattern in the<BR>
+example below:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00024.rle">
+<IMG SRC="stable_patterns/img00024.png"></A><BR><BR>
+<BR>
+This was soon beaten by Stephen Silver, who also used that same<BR>
+initial stage.<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00025.rle">
+<IMG SRC="stable_patterns/img00025.png"></A><BR><BR>
+<BR>
+This record of 497 ticks has not been beaten by any other 90°<BR>
+reflectors, until 24 January 2009 when I managed to make a<BR>
+staged-recovery reflector which recovers in just 466 ticks!<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00026.rle">
+<IMG SRC="stable_patterns/img00026.png"></A><BR><BR>
+<BR>
+However, a superb 180° reflector was found by Dave Greene:<BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect4"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect5">The Boojum reflector</A>
+ <A HREF="#sect6"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+This reflector uses the very first initial stage found, but it<BR>
+only uses section 0: glider -&gt; beehive + mess. Dave then found<BR>
+a way of perturbing the mess to produce another glider, which<BR>
+happens to be on the correct lane for deleting the beehive. This<BR>
+won two independent $100 prizes, because of its fast speed and<BR>
+impressive compactness.<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00027.rle">
+<IMG SRC="stable_patterns/img00027.png"></A><BR><BR>
+<BR>
+The reflector recovers so fast that two gliders 202 ticks apart<BR>
+can be reflected. This makes it useful in situations where the<BR>
+497-reflector is too slow. It can also fit into small spaces.<BR>
+<BR>
+<BR>
+<BR>
+Two copies of the boojum reflector can be placed back-to-back<BR>
+so that the output of one goes into the input of the other.<BR>
+Because it is a 180° reflector, the output of the second reflector<BR>
+goes back into the input of the first. This can form all oscillators<BR>
+of periods 202 or more, as long as they're not divisible by 4.<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00028.rle">
+<IMG SRC="stable_patterns/img00028.png"></A><BR><BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect5"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect6">The Rectifier</A>
+ <A HREF="#sect7"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+However, Dave Greene's boojum reflector, as small and fast as it<BR>
+is, is still not the fastest. In 2009, I discovered a reflector<BR>
+with a recovery time of just 106 generations. It is unique in<BR>
+being the only stable reflector that contains only a single stage;<BR>
+the catalysts act in quick succession, and no unwanted objects<BR>
+are produced.<BR>
+<BR>
+Another interesting feature of the rectifier, and the reason for<BR>
+its nomenclature, is the absence of catalysts along the output<BR>
+path. This makes it viable as a merge circuit, although the small<BR>
+separation between the input and output paths makes it impractical<BR>
+in the classical sense of a merge circuit. However, this property<BR>
+can still be used. The pattern below showcases the important<BR>
+features of the rectifier:<BR>
+<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00029.rle">
+<IMG SRC="stable_patterns/img00029.png"></A><BR><BR>
+<BR>
+<BR>
+When I accidentally discovered the rectifier, I was not aware of<BR>
+this ability, so just considered it to be a faster alternative to<BR>
+the boojum reflector. As opposed to the boojum reflector, this<BR>
+required neither skill nor computational power; I manually added<BR>
+an eater3 on to a reaction by Paul Callahan, which serendipitously<BR>
+restored the block. If you've tried building reflectors before,<BR>
+you will know that this amount of luck is seldom encountered.<BR>
+<BR>
+For a more in-depth analysis of the rectifier and its uses, see<BR>
+Dave Greene's article at:<BR>
+<BR>
+<A HREF="http://pentadecathlon.com/lifeNews/2009/05/new_stable_180degree_glider_re.html#more">http://pentadecathlon.com/lifeNews/2009/05/new_stable_180degree_glider_re.html#more</A><BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect6"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect7">The $100 question</A>
+ <A HREF="#sect8"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+When Dieter Liethner and Alan Hensel originally proposed the two<BR>
+prizes, they were expecting a 90° reflector. A 90° reflector would<BR>
+be useful in more situations than a 180° reflector. Dave Greene<BR>
+recycled $100 of his prize money to make two $50 prizes. If you<BR>
+win the more ambitious prize, you will also get the money for the<BR>
+easier prize. That is, unless someone wins the easier prize first.<BR>
+The two prizes are:<BR>
+<BR>
+Create a stable 90° reflector within a 50x50 box<BR>
+Create a stable 90° reflector within a 35x35 box<BR>
+<BR>
+There is some ambiguity within these statements. For starters,<BR>
+does the bounding box only include the still-lifes, or does<BR>
+it include temporary sparks? Secondly, if a stable reflector<BR>
+emits multiple gliders, do all but one need to be eaterised?<BR>
+<BR>
+It would be almost impossible to do this using Herschel technology.<BR>
+The first, and easiest method, is to adapt one of Paul Callahan's<BR>
+reactions. This is the technique used in the boojum reflector.<BR>
+The second method is to try and create an even cleaner reaction.<BR>
+That would be the most elegant way of doing the task. The third<BR>
+option, which Dave Greene proposed, involves using drifter-based<BR>
+technology to produce a glider. I think (but can't prove) that<BR>
+this method is impossible, but it would produce the smallest<BR>
+reflector.<BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect7"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect8">Stable Converters</A>
+ <A HREF="#sect9"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+We now know how we can rotate, reflect and multiply gliders<BR>
+without synchronisation. However, can we turn a glider into<BR>
+other signal types, like switch engines and LWSSes?<BR>
+<BR>
+One method is to create and duplicate gliders, then collide<BR>
+them to form the more complex object. This works well, but<BR>
+only if the desired object has a glider synthesis. For example,<BR>
+(at the time of writing) there is no known synthesis for any<BR>
+of the c/3 ships, e.g. turtle, dart etc.<BR>
+<BR>
+Another method is to collide gliders and Herschels. This leads<BR>
+to more compact converters. An example is shown below:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00030.rle">
+<IMG SRC="stable_patterns/img00030.png"></A><BR><BR>
+<BR>
+This has a very fast recovery time. A smaller H-&gt;LWSS is<BR>
+possible, but it is slower. The principle behind this is<BR>
+to create an intermediate object &quot;in passing&quot;, which is<BR>
+then converted to the desired output using the same<BR>
+Herschel. This is used in the following device, by Dieter<BR>
+Liethner:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00031.rle">
+<IMG SRC="stable_patterns/img00031.png"></A><BR><BR>
+<BR>
+The first principle yields a good H-&gt;MWSS device:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00032.rle">
+<IMG SRC="stable_patterns/img00032.png"></A><BR><BR>
+<BR>
+which is roughly the same size as the one using the second<BR>
+method:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00033.rle">
+<IMG SRC="stable_patterns/img00033.png"></A><BR><BR>
+<BR>
+The only H-&gt;HWSS converter built fires 3 gliders together<BR>
+to form a HWSS. This means that it is much larger than<BR>
+the other converters:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00034.rle">
+<IMG SRC="stable_patterns/img00034.png"></A><BR><BR>
+<BR>
+Now that we have converters from Herschels to spaceships,<BR>
+how do we turn them back into Herschels/gliders? The obvious<BR>
+method is to collide the spaceship into a still-life, which<BR>
+is rebuilt by the output Herschel. The best LWSS-&gt;G is shown<BR>
+below:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00035.rle">
+<IMG SRC="stable_patterns/img00035.png"></A><BR><BR>
+<BR>
+The following converter, which I found using Karel Suhajda's<BR>
+Herschel track search program, Hersrch, converts either an LWSS<BR>
+or an MWSS into a glider. It is the smallest of its kind:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00036.rle">
+<IMG SRC="stable_patterns/img00036.png"></A><BR><BR>
+<BR>
+I've also made the smallest (and fastest) HWSS-&gt;G device, which<BR>
+takes just 1007 ticks to recover. The original version of this<BR>
+used a boojum reflector, but Dave Greene suggested the following<BR>
+replacement:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00037.rle">
+<IMG SRC="stable_patterns/img00037.png"></A><BR><BR>
+<BR>
+Dave also made a fast LWSS -&gt; Herschel converter, with no inter-<BR>
+mediate glider stage. The conduit can feed either an F116 or R64<BR>
+conduit (shown below). Incoming LWSSes must be seperated by at<BR>
+least 978 generations, although at certain timings the LWSS can<BR>
+pass through unaffected. The circuit can be used as a demulti-<BR>
+plexer.<BR>
+<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00038.rle">
+<IMG SRC="stable_patterns/img00038.png"></A><BR><BR>
+<BR>
+<BR>
+More complex converters can be made. Two classic examples are<BR>
+Dave Greene's H-&gt;swimmer and his and Noam's H-&gt;2c/3 transceiver.<BR>
+You can find out about them on <A HREF="http://b3s23life.blogspot.com/">http://b3s23life.blogspot.com/</A><BR>
+<BR>
+In February 2009, I found a way of optimising the H-&gt;swimmer<BR>
+converter, removing an unnecessary glider from the recipe. This<BR>
+allowed me to remove an entire track from the device. Next, I<BR>
+used this converter to build the first glider -&gt; Cordership<BR>
+converter. A description of the converter (as well as the<BR>
+pattern in RLE and MCell format) can be found at:<BR>
+<BR>
+<A HREF="http://b3s23life.blogspot.com/2009/02/first-complete-glider-to-cordership.html">http://b3s23life.blogspot.com/2009/02/first-complete-glider-to-cordership.html</A><BR>
+<BR>
+The most complex stable converter is my stable lightspeed trans-<BR>
+ceiver. The receiver part is complete, but the transmitter part<BR>
+requires five synchronised inputs. Completing the device is possible,<BR>
+just extremely boring. Find out more on:<BR>
+<BR>
+<A HREF="http://www.yucs.org/~gnivasch/life/lightspeed/index.html#beehive">http://www.yucs.org/~gnivasch/life/lightspeed/index.html#beehive</A><BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect8"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect9">Logic Gates</A>
+ <A HREF="#sect10"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+Logic gates can be made easily in Life. The AND gate is the simplest:<BR>
+<BR>
+<BR><A HREF="stable_patterns/pic00039.lif">
+<IMG SRC="stable_patterns/img00039.png"></A><BR><BR>
+The XOR gate is the second simplest. It has one glider and<BR>
+one Herschel input, and one glider output.<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00040.rle">
+<IMG SRC="stable_patterns/img00040.png"></A><BR><BR>
+<BR>
+Later I was able to produce two more XOR gates, both of them<BR>
+being more compact than the one shown above. The latter one can<BR>
+fire a glider on the very edge of the pattern!<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00041.rle">
+<IMG SRC="stable_patterns/img00041.png"></A><BR><BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00042.rle">
+<IMG SRC="stable_patterns/img00042.png"></A><BR><BR>
+<BR>
+The OR gate is the most complex elementary logic gate. The<BR>
+smallest one produced is by Dave Greene:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00043.rle">
+<IMG SRC="stable_patterns/img00043.png"></A><BR><BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect9"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect10">Asynchronous logic gates</A>
+ <A HREF="#sect11"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+In my opinion the most interesting form of logic gates are<BR>
+those that can function asynchronously. I found the semi-<BR>
+asynchronous AND gate pictured below:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00044.rle">
+<IMG SRC="stable_patterns/img00044.png"></A><BR><BR>
+<BR>
+To make it even better, it could be made completely asynchronous.<BR>
+I'm working on making a variety of logic gates that function<BR>
+this way, ranging from the simple to the complex. One of<BR>
+the more complex ones that I've made is the ALU. Shown<BR>
+below are two connected bits of the ALU; any number are<BR>
+supported:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00045.rle">
+<IMG SRC="stable_patterns/img00045.png"></A><BR><BR>
+<BR>
+<BR>
+A block represents a 0, the absence of a block represents<BR>
+a 1. Although this may seem counter-intuitive, it simplifies<BR>
+the internal details.<BR>
+<BR>
+Input 1 = READ (input)<BR>
+Input 2 = CLEAR<BR>
+Output 3 = READ (output)<BR>
+Input 4 = ADD<BR>
+<BR>
+The least significant bit is at the top, the most significant<BR>
+bit is at the bottom. The device has been proven to work.<BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect10"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect11">Stable computers</A>
+ <A HREF="#sect12"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+These logic gates, together with memory storage devices, make<BR>
+it possible to build stable computers. Paul Chapman built the<BR>
+first universal computer in Life, a Minsky Register Machine:<BR>
+<BR>
+<A HREF="http://www.igblan.free-online.co.uk/igblan/ca/index.html">http://www.igblan.free-online.co.uk/igblan/ca/index.html</A><BR>
+<BR>
+It is very powerful, but extremely slow due to the linear<BR>
+data storage it uses (counter memory).<BR>
+<BR>
+<BR>
+However, other memory architectures are possible; My U.C.C.<BR>
+uses an unbounded binary data storage in order to vastly<BR>
+accelerate the computer and make the process of programming<BR>
+it more user-friendly. The U.C.C. is mentioned in more<BR>
+detail in the 'Replicators' section.<BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect11"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect12">The Universal Constructor</A>
+ <A HREF="#sect13"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+The challenge of making a Universal Constructor has been<BR>
+proven solvable for decades. Originally, people thought<BR>
+that a constructor would be built out of p30 devices.<BR>
+All of the required components (blocks, eaters, penta-<BR>
+decathlons, queen bee shuttles etc.) were proven to have<BR>
+a glider synthesis. This means that it is theoretically<BR>
+possible to build a p30 machine that constructs p30<BR>
+devices - including itself. Lengthly design schematics<BR>
+for these things have been made, but no-one has ever<BR>
+attempted to actually build one. The fundamental<BR>
+components of such a device are known as &quot;Buckingham<BR>
+bits&quot;.<BR>
+<BR>
+However, you don't require all of these &quot;Buckingham bits&quot;.<BR>
+Instead it is possible to build a Universal Constructor<BR>
+from just 5 basic still-lifes. They are the block, the<BR>
+eater, the beehive, the boat and the tub. Devices that<BR>
+comply with this standard are known as Spartan devices.<BR>
+Paul Chapman and Dave Greene built a functioning U.C.<BR>
+using Spartan devices, that uses a slow-glider synthesis<BR>
+to construct other Spartan devices, up to and including<BR>
+itself.<BR>
+<BR>
+The constructor reads instructions from a tape of boats<BR>
+(1s) and blocks (0s). There is a very simple method for<BR>
+interpreting this binary code as instructions. The first<BR>
+part of the constructor simply reads the binary code. The<BR>
+pattern below does not show the entire instruction tape,<BR>
+which extends to the north-west:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00046.rle">
+<IMG SRC="stable_patterns/img00046.png"></A><BR><BR>
+<BR>
+The reader works by pulling a block (not shown) south-east<BR>
+by multiples of 12 cells. Each time it does this, a glider<BR>
+is emitted from the block (reading head) to the tape. If<BR>
+there is a boat, the glider is reflected south-east. If<BR>
+there is a block, the glider is absorbed. These still-lifes<BR>
+are read destructively, so the tape is destroyed at the end<BR>
+of the operation. This U.C. is not intended to be used<BR>
+more than once.<BR>
+<BR>
+The next section reads the binary code and converts it to<BR>
+simple instructions. The instructions are:<BR>
+<BR>
+DEC + Fire WHITE glider<BR>
+DEC + Fire BLACK glider<BR>
+DEC<BR>
+INC<BR>
+<BR>
+Here is the section that reads the binary code and converts<BR>
+it to instructions. (Part of this overlaps with the first<BR>
+section, so that you can see how to fit them together):<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00047.rle">
+<IMG SRC="stable_patterns/img00047.png"></A><BR><BR>
+<BR>
+The third and final part follows the instruction by firing<BR>
+gliders at a block. The first block acts as an &quot;elbow&quot; and<BR>
+the second block acts as a &quot;hand&quot;. These two degrees of<BR>
+freedom allows something to be built at any position.<BR>
+<BR>
+This construction arm is also used extensively in my U.C.C,<BR>
+forming the basis for every register, tape read/write head<BR>
+and the main construction arm.<BR>
+<BR>
+Why do you need two seperate FIRE instructions? The reason<BR>
+for this is because, like bishops on a chessboard, gliders<BR>
+can only stay on their own colour (or parity).<BR>
+<BR>
+The last part (again with an overlap) is shown below:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00048.rle">
+<IMG SRC="stable_patterns/img00048.png"></A><BR><BR>
+<BR>
+To see the pattern in action, download it from here:<BR>
+<BR>
+<A HREF="http://entropymine.com/jason/life/oversize/jslife-oversize-20060831.zip">http://entropymine.com/jason/life/oversize/jslife-oversize-20060831.zip</A><BR>
+<BR>
+Or open &quot;constructor-memory-tape&quot; in Golly's library.<BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect12"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect13">Replicators</A>
+ <A HREF="#sect14"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+Unfortunately, the Universal constructor does not have a<BR>
+method of replicating its instructions. This means that<BR>
+the device cannot function as a replicator, puffer or<BR>
+arbitrary-speed spaceship. However, a certain tape of<BR>
+instructions can be fed into this device to make such<BR>
+a pattern, but the synthesised device could not contain<BR>
+a tape as complex as the one describing it, meaning that<BR>
+it is impossible for this constructor to reproduce.<BR>
+<BR>
+There are two methods of making a reproducing universal<BR>
+constructor. The first way is to give it a section to<BR>
+replicate the tape. This was Von Neumann's approach, and<BR>
+works rather well. However, the much more flexible way<BR>
+is to use a universal computer. This is a more elegant<BR>
+solution, so this is the technique I implemented (see<BR>
+below).<BR>
+<BR>
+In 2009, I expicitly constructed a machine capable of<BR>
+self-replication, which consists of a universal computer<BR>
+connected to a construction arm. This machine is very<BR>
+complex - it would take somewhere between 10^14 and 10^18<BR>
+generations to reproduce, depending on whether any clever<BR>
+algorithms are employed.<BR>
+<BR>
+The pattern and description is available online at:<BR>
+<BR>
+<A HREF="http://myweb.tiscali.co.uk/calcy/life/universal-CC/index.htm">http://myweb.tiscali.co.uk/calcy/life/universal-CC/index.htm</A><BR>
+<BR>
+<BR>
+A brief summary can also be found at:<BR>
+<BR>
+<A HREF="http://www.conwaylife.com/wiki/index.php?title=Spartan_universal_computer-constructor">http://www.conwaylife.com/wiki/index.php?title=Spartan_universal_computer-constructor</A><BR>
+<BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect13"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect14">Metapixels</A>
+ <A HREF="#sect15"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+In June 2006, Brice Due made an incredible creation based<BR>
+on p46 technology. This device, 2048 cells in diameter,<BR>
+can simulate a single cell in Life. The two properties<BR>
+that distinguish this from David Bell's Unit Life Cell<BR>
+are the programmability (any outer-totalistic rule can<BR>
+be simulated) and the fact that the middle of the pattern<BR>
+acts as an indicator to whether the cell is live or dead.<BR>
+<BR>
+As powerful as Brice's construction is, it seems out of<BR>
+place on an article about stable technology. The reason<BR>
+for this is that I created a stable version of Brice's<BR>
+OTCAmetapixel, that works at p16777216 (rather than<BR>
+p35328), is much bigger and is rotated 45° to the<BR>
+orthogonal. It can also support more rules (2^512<BR>
+instead of 2^18), including non-totalistic and<BR>
+asymmetrical rules.<BR>
+<BR>
+My metapixel relies on LC00-style logic circuitry. The<BR>
+ROM uses a principle very similar to the universal<BR>
+constructor, and the same shotgun (by Paul Chapman).<BR>
+My ROM is non-destructive, so the metacell can be used<BR>
+again and again without compromising the pattern.<BR>
+<BR>
+It also uses a binary addressing system, which uses<BR>
+a logic component I made called a 2^n-ifier. The<BR>
+purpose of the device is to convert 1 glider into<BR>
+2^n gliders (hence the name). Each input of the<BR>
+addressing system is attached to a 2^n-ifier of<BR>
+different index, so that the 9 inputs can be<BR>
+transformed into a unique number between 0 and<BR>
+511. Here is a 2^5-ifier:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00049.rle">
+<IMG SRC="stable_patterns/img00049.png"></A><BR><BR>
+<BR>
+The display used in my metacell is simply two waves of<BR>
+diverging gliders, opposed to Brice's display which has two<BR>
+waves of converging LWSSes. You can download the metacell<BR>
+(along with a script) from:<BR>
+<BR>
+<A HREF="http://cranemtn.com/life/files/UMC.zip">http://cranemtn.com/life/files/UMC.zip</A><BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect14"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect15">Display Devices</A>
+ <A HREF="#sect16"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+The display in my device has to be periodically fed with<BR>
+gliders (the analogy of electricity) in order to be ON.<BR>
+Dave Greene has suggested another method of display<BR>
+device, which is stable in the ON and OFF states, and<BR>
+only requires power to switch the state. The pattern<BR>
+below demonstrates the principle, but cannot be readily<BR>
+used.<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00050.rle">
+<IMG SRC="stable_patterns/img00050.png"></A><BR><BR>
+<BR>
+Another suggested method (but too large and complicated)<BR>
+is to synthesise a row of puffers, which lay down blocks<BR>
+periodically to fill the display segment. This method can<BR>
+permit a variety of shapes, whereas the liquid-crystal<BR>
+idea can only allow parallelograms. The LCD parallelograms<BR>
+can obviously be combined to yield some other shapes,<BR>
+including the shape of a segment in a 7-segment display.<BR>
+I have a working model of a stable LCD 7-segment display,<BR>
+which you can find at:<BR>
+<BR>
+<A HREF="http://myweb.tiscali.co.uk/calcy/life/7seglcd.gz">http://myweb.tiscali.co.uk/calcy/life/7seglcd.gz</A><BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect15"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect16">Emus</A>
+ <A HREF="#sect17"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+Herschel tracks are asynchronous, but signals can be<BR>
+regularly spaced along them to produce oscillators or<BR>
+guns of new periods. Near the start of this article I<BR>
+mentioned the &quot;Machine Gun&quot;, which is the shortest<BR>
+Herschel loop. Oscillators of smaller periods can be<BR>
+made by inserting multiple signals in the same track.<BR>
+For example, oscillators called emus can be made, but<BR>
+they can't emit gliders. The four emus are shown below:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00051.rle">
+<IMG SRC="stable_patterns/img00051.png"></A><BR><BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00052.rle">
+<IMG SRC="stable_patterns/img00052.png"></A><BR><BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00053.rle">
+<IMG SRC="stable_patterns/img00053.png"></A><BR><BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00054.rle">
+<IMG SRC="stable_patterns/img00054.png"></A><BR><BR>
+<BR>
+<BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>
+<h3><A HREF="#sect16"><IMG SRC="larrow.PNG" alt="previous"></A>
+<A NAME="sect17">Quetzals</A>
+ <A HREF="#sect18"><IMG SRC="rarrow.PNG" alt="next"></A></h3><BR>
+Herschel tracks are not restricted to only containing stable<BR>
+components, and lower periods than these can be attained by<BR>
+using periodic ones. For example, Dieter Liethner and Stephen<BR>
+Silver built guns of relatively low periods called Quetzals.<BR>
+The p54 and p56 guns are moderately-sized.<BR>
+<BR>
+<BR>
+<BR>
+P54 gun:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00055.rle">
+<IMG SRC="stable_patterns/img00055.png"></A><BR><BR>
+<BR>
+<BR>
+<BR>
+P56 gun:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00056.rle">
+<IMG SRC="stable_patterns/img00056.png"></A><BR><BR>
+<BR>
+<BR>
+<BR>
+On the other hand, the period 55 gun made using this method<BR>
+was absolutely immense, because of an unlucky accident<BR>
+meant that 44 corners were needed to make the track length<BR>
+a multiple of 55. The Herschel loop is available online at:<BR>
+<BR>
+<A HREF="http://www.argentum.freeserve.co.uk/1stq55.zip">http://www.argentum.freeserve.co.uk/1stq55.zip</A><BR>
+<BR>
+However, Stephen Silver then managed to make a different p55<BR>
+gun. The newer version uses glider streams, which collide to<BR>
+produce a LWSS stream, which is converted into a Herschel<BR>
+stream by another pair of glider streams. The pattern has a<BR>
+distinct central 'spine' consisting of LWSSes and Herschels:<BR>
+<BR>
+<BR><A HREF="stable_patterns/rle00057.rle">
+<IMG SRC="stable_patterns/img00057.png"></A><BR><BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR><BR><IMG SRC="divider.PNG"><BR><BR>
+<BR>By Calcyman<BR>
+<A HREF="index.htm">Back to home page</A><BR>
+<A HREF="mailto:editor@calcyman.co.uk">E-mail me</A><BR>
+<BR>
+<!-- File conversion by lifeconv - By Calcyman
+58 patterns and 3235 lines converted in 66 seconds. -->
+</BODY></HTML>
+

@@ -1,5 +1,4 @@
-
-# apgcode-to-clipboard-RLE:
+# apgcode-to-clipboard-RLE-Python3.py
 #   takes an input apgcode, and copies equivalent RLE (with a header line)
 #   into the clipboard, ready to be pasted into Golly.
 # https://conwaylife.com/forums/viewtopic.php?p=27197#p27197
@@ -12,6 +11,10 @@
 # Sept. 2014
 # 
 # ord2() from apgsearch, by Adam P. Goucher
+#
+# patched together by Dave Greene, 4 February 2016,
+#   https://conwaylife.com/forums/viewtopic.php?p=27197#p27197
+# and Python3 update also by Dave Greene, 13 May 2022
 
 import golly as g
 
@@ -49,7 +52,7 @@ def decodeCanon(canonPatt):
         else:
             u = ord2(c)
             v = 1
-            for jj in xrange(0,5):
+            for jj in range(0,5):
                 if (u & v):
                     clist += [x, y+jj]
                 v = v << 1

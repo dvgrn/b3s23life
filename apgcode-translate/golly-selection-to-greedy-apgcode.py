@@ -1,6 +1,6 @@
 # golly-selection-to-greedy-apgcode.py
 # Ian07's name for this script is "apgcode-greedy.py".
-# Golly selection to apgcode (in clipboard)
+# Golly selection to apgcode (in clipboard) in Python3
 #  -- line 67 opens the relevant Catagolue page.
 # Stolen shamelessly from apgsearch.  Thanks Adam!
 

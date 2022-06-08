@@ -1,4 +1,4 @@
-# ticker-tape-maker-p30.py
+# ticker-maker-p30-Python3.py
 # Golly Python script. Written by PM 2Ring, March 2009. Updated August 2009.
 # Modified for Golly 2.0+ by Andrew Trevorrow.
 # Updated to Python3 by Dave Greene, June 2022.

@@ -1,4 +1,4 @@
-# lifewiki-rlescraper-v2.0.py
+# lifewiki-rlescraper-v2.1.py
 # Pretty much the only good thing about this code is that it works, and saves a
 #   considerable amount of admin time creating commented files for upload one by one.
 # The script does several things:
@@ -51,6 +51,7 @@
 #                           in cases like http://www.conwaylife.com/patterns/beethoven.cells
 # Version 2.0 (7 Sept 2021) switch "http://" to "https://" everywhere,
 #                           mention LifeHistory/multistate case where no .cells is created
+# Version 2.1 (7 August 2022) removes some script-ending error messages, continues processing
 #
 # DONE:  add a check for {pname}_synth.rle,
 #        and create file for upload if not found in pattern collection
@@ -76,6 +77,7 @@
 #        so to get .cells file for new articles, first .rle files are created
 #        and (manually) uploaded, then those same .rle files are downloaded again
 #        the next time the script is run, and are used to make .cells files)
+# TODO:  remove <!-- ... --> comments from HTML before processing
 
 import golly as g
 import urllib.request
@@ -94,6 +96,7 @@ cellsfolder = samplepath + "cells/"
 rlefolder = samplepath + "rledata/"
 synthfolder = samplepath + "synthesis-costs/"
 synthfile = synthfolder + "synthesis-costs.txt"
+patternsfile = synthfolder + "patterns.txt"
 
 if not os.path.exists(samplepath):
   resp = g.getstring("No folder exists at '" + samplepath + "'.  Create it and subfolders?","Yes")
@@ -108,6 +111,11 @@ if not os.path.exists(synthfile):
        + "\nOpen the file 'link.txt' in the lifewiki-rlescraper repository and follow instructions to download.")
   g.exit()
 
+if not os.path.exists(patternsfile):
+  g.note("No patterns file is present at '" + patternsfile + ".\n"
+         + "Please copy and paste the contents of https://conwaylife.com/mod_delete_pattern.php"
+         + "\ninto a new text file named patterns.txt, after logging in to https://conwaylife.com/mod.php .")
+         
 # first load synth costs from Catagolue into a dictionary
 with open(synthfile,"r") as f:
   foundheader = False
@@ -126,7 +134,16 @@ with open(synthfile,"r") as f:
       cost = int(coststr)
       if cost == 999999999999999999: cost = -1
       catapgcodes[apgcode]=cost    
-  
+
+# load dictionary of already uploaded patterns from conwaylife.com
+with open(patternsfile,"r") as f:
+  patlist = f.readlines()
+patdict = dict()
+for item in patlist:
+  patfilename = item.strip()
+  if patfilename != "":
+    patdict[patfilename]="exists"
+
 toobigpatternslist = ["0e0pmetacell","caterloopillar","caterpillar","centipede","centipede caterloopillar", \
                       "collatz5nplus1simulator","demonoid","gemini","halfbakedknightship","hbkgun",         \
                       "linearpropagator","orthogonoid","parallelhbk","picalculator","shieldbug","succ",     \
@@ -143,7 +160,6 @@ toobigarticleslist = ['0E0P_metacell', 'Caterloopillar', 'Caterpillar', 'Centipe
 templatetypes = ['{{Agar', '{{Conduit', '{{Crawler', '{{Fuse', '{{GrowingSpaceship', '{{Gun', '{{InductionCoil', \
                  '{{Methuselah', '{{MovingBreeder', '{{Oscillator', '{{Pattern', '{{Puffer', '{{Reflector', \
                  '{{Rotor', '{{Sawtooth', '{{Spaceship', '{{Stilllife', '{{UnitCell', '{{Wave', '{{Wick', '{{Wickstretcher']
-
 
 def retrieveparam(article, param, s):
   if s.find(param)<0:
@@ -169,9 +185,10 @@ def retrieveparam(article, param, s):
     
     return pval[:pval.index("|")].strip()
   else:
-    g.note("Could not find definition of parameter '"+param+"' in article '"+article+"'.")
-    g.setclipstr(s)
-    g.exit()
+    # g.note("Could not find definition of parameter '"+param+"' in article '"+article+"'.")
+    # g.setclipstr(s)
+    # g.exit()
+    return ""  # this happens for example when somebody puts the keyword in a comment on one of these lines
 
 def hasinfobox(s):
   hasinfobox = False
@@ -207,7 +224,7 @@ while 1:
 # and collect all the relevant article names on it
 ##################################################
 articlelist = []
-for url in linklist: ##############################################
+for url in linklist:
   g.show("Retrieving " + url)
   response = urllib.request.urlopen(url)
   html = response.read().decode()
@@ -251,9 +268,23 @@ with open(rlefolder + "rledata.csv","w") as f:
       continue
     articlename = item[6:]
     url = 'https://conwaylife.com/w/index.php?title=' + articlename + '&action=edit'
+    trycount = 1
+    g.show("Checking " + url + ": attempt " + str(trycount))
+    
     response = urllib.request.urlopen(url)
-    g.show("Checking " + url)
     html = response.read().decode()
+    
+    # while trycount<6:
+    #   try:
+    #     g.show("Checking " + url + ": attempt " + str(trycount))
+    #     response = urllib.request.urlopen(url)
+    #     html = response.read().decode()
+    #   except:
+    #     trycount+=1
+    # if trycount==6:
+    #   g.show("call to response.read() failed five times in a row.")
+    #   response = urllib.request.urlopen(url)
+    #  html = response.read().decode()  # no error trapping, so if it happens again the script will fail here.
     begintext = html.find('wpTextbox1">')
     if begintext<0:
       g.note("Could not find article text textbox 'wpTextbox1' in HTML for " + articlename + ".")
@@ -346,6 +377,9 @@ count = 0
 for item in sorted(pnamedict.keys()):
   count +=1
   g.show("Checking pname '" + item + "'")
+  if item + ".rle" in patdict and item + ".cells" in patdict:
+    # we already have this pname
+    continue
   g.update()
   data = pnamedict[item][:]
   while len(data)>4:
@@ -354,15 +388,17 @@ for item in sorted(pnamedict.keys()):
       data=data[4:]
     else:
       data = dtemp # not worrying about weird unusual cases like duoplet / diagonal on-off, just take first infobox.
-  sourceurl = data[0]
-  articlename = sourceurl.replace("https://conwaylife.com/w/index.php?title=","").replace("&action=edit","")
-  url = 'https://conwaylife.com/wiki/' + articlename
-  response = urllib.request.urlopen(url)
-  html = response.read().decode()
-  if html=="":
-    g.note("Problem with article " + articlename + ":\n" + str(pnamedict[item]))
-    continue
-    # g.exit(articlename + " problem")
+  # DMG 3/3/2022:  it seems like this code is using bandwidth without doing anything with the result --
+  #                commenting it out to see if everything still works
+  # sourceurl = data[0]
+  # articlename = sourceurl.replace("https://conwaylife.com/w/index.php?title=","").replace("&action=edit","")
+  # url = 'https://conwaylife.com/wiki/' + articlename
+  # response = urllib.request.urlopen(url)
+  # html = response.read().decode()
+  # if html=="":
+  #   g.note("Problem with article " + articlename + ":\n" + str(pnamedict[item]))
+  #   continue
+  #  # g.exit(articlename + " problem")
   
   url = 'https://www.conwaylife.com/patterns/' + item + ".rle"
   width, height = 999999, 999999
@@ -407,63 +443,66 @@ for item in sorted(pnamedict.keys()):
     else:
       g.note(str(e) + " for rle pname " + item)
 
-  # check for an uploaded {pname}_synth.rle  
-  url = 'https://www.conwaylife.com/patterns/' + item + "_synth.rle"
-  try:
-    response = urllib.request.urlopen(url)
-    html = response.read().decode()
-    # g.note(html[:500])
-  except Exception as e:
-    if str(e) == "HTTP Error 404: Not Found":
-      # g.note("Not Found!  Type error: " + str(e) + " for " + item))
-      if item not in toobigpatternslist:  # skip patterns known to be too big for RLE -- they use other formats
-        missingsynth += [item]
-        # g.show(str(["Missing synth = ", len(missing), "Count = ", count]))
-    else:
-      g.note(str(e) + " for synth pname " + item)
+  # check for an uploaded {pname}_synth.rle
+  ###################### commented out at least temporarily to save time on the remaining scan
+  if "check for synthesis" == "true":
+    url = 'https://www.conwaylife.com/patterns/' + item + "_synth.rle"
+    try:
+      response = urllib.request.urlopen(url)
+      html = response.read().decode()
+      # g.note(html[:500])
+    except Exception as e:
+      if str(e) == "HTTP Error 404: Not Found":
+        # g.note("Not Found!  Type error: " + str(e) + " for " + item))
+        if item not in toobigpatternslist:  # skip patterns known to be too big for RLE -- they use other formats
+          missingsynth += [item]
+          # g.show(str(["Missing synth = ", len(missing), "Count = ", count]))
+      else:
+        g.note(str(e) + " for synth pname " + item)
 
   # check for an uploaded {pname}.cells  
   url = 'https://www.conwaylife.com/patterns/' + item + ".cells"
-  try:
-    response = urllib.request.urlopen(url)
-    html = response.read().decode()
-    # g.note(html[:500])
-  except Exception as e:
-    if str(e) == "HTTP Error 404: Not Found":
-      # g.note("Not Found!  Type error: " + str(e) + " for " + item))
-      if item not in toobigpatternslist:  # skip patterns known to be too big for RLE -- they use other formats
-        if width <=64 and height <= 100:
-          missingcells += [item]
-          g.show(str(["Number of missing cells files = ", len(missingcells), "Count of pnames = ", count]))
-          # To be consistent with the code below, .cells files should be created in a separate pass
-          # -- but we've already had a chance to collect width, height, and RLE from the RLE scan
-          # So we'll just make a .cells files using that info, as soon as a missing .cells is found.
-          #
-          # Notice that this means that .cells files are only created _after_ RLE files are already on the server.
-          # That is, we're not going and looking for RLE information in the RLE namespace, only on the server.
-          # This is suboptimal, because getting the .cells files there will require two bulk uploads instead of one.
-          # On the other hand, doing that in one step needs more code:
-          # TODO:  get RLE from raw RLE namespace if we're going to be uploading that
-          #        (this will need some fairly serious refactoring, probably moving .cells creation to a separate pass)
-          #
-          pat = g.parse(rleonly)
-          if len(pat)%2 == 0:  # don't try to make a .cells for a multistate file like RLE:briansbrainp3
-            g.new(item)
-            g.putcells(pat)
-            r = g.getrect()
-            for y in range(r[3]):
-              for x in range(r[2]):
-                ascii+="O" if g.getcell(x+r[0],y+r[1]) > 0 else "."
-              ascii+="\n"
-            with open(cellsfolder + item + ".cells","w") as f:
-              f.write(ascii)
-        else:  # width and/or height are too big
-          toobigforcells += [item]
-          # remove from the list of articles that could have cells files but don't
-          if item in noplaintextparam:
-            noplaintextparam.pop(item,"Default value. Means if item is not there, I don't care, don't want error.")
-    else:
-      pass     # g.note(str(e) + " for cells pname " + item) ##########################################
+  if item + ".cells" not in patdict:
+    try:
+      response = urllib.request.urlopen(url)
+      html = response.read().decode()
+      # g.note(html[:500])
+    except Exception as e:
+      if str(e) == "HTTP Error 404: Not Found":
+        # g.note("Not Found!  Type error: " + str(e) + " for " + item))
+        if item not in toobigpatternslist:  # skip patterns known to be too big for RLE -- they use other formats
+          if width <=64 and height <= 100:
+            missingcells += [item]
+            g.show(str(["Number of missing cells files = ", len(missingcells), "Count of pnames = ", count]))
+            # To be consistent with the code below, .cells files should be created in a separate pass
+            # -- but we've already had a chance to collect width, height, and RLE from the RLE scan
+            # So we'll just make a .cells files using that info, as soon as a missing .cells is found.
+            #
+            # Notice that this means that .cells files are only created _after_ RLE files are already on the server.
+            # That is, we're not going and looking for RLE information in the RLE namespace, only on the server.
+            # This is suboptimal, because getting the .cells files there will require two bulk uploads instead of one.
+            # On the other hand, doing that in one step needs more code:
+            # TODO:  get RLE from raw RLE namespace if we're going to be uploading that
+            #        (this will need some fairly serious refactoring, probably moving .cells creation to a separate pass)
+            #
+            pat = g.parse(rleonly)
+            if len(pat)%2 == 0:  # don't try to make a .cells for a multistate file like RLE:briansbrainp3
+              g.new(item)
+              g.putcells(pat)
+              r = g.getrect()
+              for y in range(r[3]):
+                for x in range(r[2]):
+                  ascii+="O" if g.getcell(x+r[0],y+r[1]) > 0 else "."
+                ascii+="\n"
+              with open(cellsfolder + item + ".cells","w") as f:
+                f.write(ascii)
+          else:  # width and/or height are too big
+            toobigforcells += [item]
+            # remove from the list of articles that could have cells files but don't
+            if item in noplaintextparam:
+              noplaintextparam.pop(item,"Default value. Means if item is not there, I don't care, don't want error.")
+      else:
+        pass     # g.note(str(e) + " for cells pname " + item) ##########################################
 
 # create RLE files for any patterns that have raw RLE
 #   but can not be found on the LifeWiki server
@@ -471,35 +510,37 @@ for item in sorted(pnamedict.keys()):
 s=""  # cumulative error report
 for pname in missing:
   url = 'https://conwaylife.com/w/index.php?title=RLE:' + pname + '&action=edit'
-  try:
-    response = urllib.request.urlopen(url)
-    html = response.read().decode()
-  except:
-    s+="\n" + url + "\n"+pname+":  Not Found (or other) error"
-  if html.find('name="wpTextbox1">')==-1:
-    s+="\n" + url + "\n"+pname+":  Could not find RLE textbox in HTML.  Article must have pname but no LifeViewer animation."
-    g.show("No raw RLE for '" + pname + ".")
-  else:
-    start = html.index('name="wpTextbox1">')
-    rle = html[start+18:html.index('!',start+17)+1]
-    filename = outfolder + pname + ".rle"
-    data = pnamedict[pname]
-    discoverer, discoveryear = data[2], data[3]
-    sourceurl = data[0]
-    articlename = sourceurl.replace("https://conwaylife.com/w/index.php?title=","").replace("&action=edit","")
-    url = 'https://conwaylife.com/wiki/' + articlename
-    paturl = 'https://www.conwaylife.com/patterns/' + pname + ".rle"
-    with open(filename, 'w') as f:
-      f.write("#N "+pname+".rle\n")
-      if discoverer!="":
-        if discoveryear!="":
-          f.write("#O " + discoverer + ", " + discoveryear + "\n")
-        else:
-          f.write("#O " + discoverer + "\n")
-      f.write("#C " + url + "\n")
-      f.write("#C " + paturl + "\n")      
-      f.write(rle)
-    g.show("Wrote " + filename)
+
+  if pname + ".rle" not in patdict:
+    try:
+      response = urllib.request.urlopen(url)
+      html = response.read().decode()
+    except:
+      s+="\n" + url + "\n"+pname+":  Not Found (or other) error"
+    if html.find('name="wpTextbox1">')==-1:
+      s+="\n" + url + "\n"+pname+":  Could not find RLE textbox in HTML.  Article must have pname but no LifeViewer animation."
+      g.show("No raw RLE for '" + pname + ".")
+    else:
+      start = html.index('name="wpTextbox1">')
+      rle = html[start+18:html.index('!',start+17)+1]
+      filename = outfolder + pname + ".rle"
+      data = pnamedict[pname]
+      discoverer, discoveryear = data[2], data[3]
+      sourceurl = data[0]
+      articlename = sourceurl.replace("https://conwaylife.com/w/index.php?title=","").replace("&action=edit","")
+      url = 'https://conwaylife.com/wiki/' + articlename
+      paturl = 'https://www.conwaylife.com/patterns/' + pname + ".rle"
+      with open(filename, 'w') as f:
+        f.write("#N "+pname+".rle\n")
+        if discoverer!="":
+          if discoveryear!="":
+            f.write("#O " + discoverer + ", " + discoveryear + "\n")
+          else:
+            f.write("#O " + discoverer + "\n")
+        f.write("#C " + url + "\n")
+        f.write("#C " + paturl + "\n")      
+        f.write(rle)
+      g.show("Wrote " + filename)
 
 # create files for any pattern syntheses that have raw RLE
 #   but can not be found on the server
@@ -542,3 +583,4 @@ g.setclipstr(s + "\nCells files created: " + str(missingcells) + "\nPatterns too
                + "\napgcodes where LifeWiki synth exists but no Catagolue synth: " +str(apgcodesLWsynthbutnoCsynth) \
                + "\napgcodes where Catagolue synth exists but no LifeWiki synth: " +str(apgcodesnoLWsynthbutCsynth) \
                )
+g.show("Exceptions written to clipboard. LW-scraper.py run complete.")

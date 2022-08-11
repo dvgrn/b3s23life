@@ -52,7 +52,9 @@
 # Version 2.0 (7 Sept 2021) switch "http://" to "https://" everywhere,
 #                           mention LifeHistory/multistate case where no .cells is created
 # Version 2.1 (7 August 2022) removes some script-ending error messages, continues processing
-#
+# Version 2.2 (10 August 2022) somebody thought of putting a #REDIRECT in the RLE namespace,
+#                               so had to account for that case, and also <!-- ... --> comments
+#                               containing awkward keywords like "pname" and "discoverer"
 # DONE:  add a check for {pname}_synth.rle,
 #        and create file for upload if not found in pattern collection
 # DONE:  using the above check of downloaded RLE files, create
@@ -77,7 +79,6 @@
 #        so to get .cells file for new articles, first .rle files are created
 #        and (manually) uploaded, then those same .rle files are downloaded again
 #        the next time the script is run, and are used to make .cells files)
-# TODO:  remove <!-- ... --> comments from HTML before processing
 
 import golly as g
 import urllib.request
@@ -224,7 +225,7 @@ while 1:
 # and collect all the relevant article names on it
 ##################################################
 articlelist = []
-for url in linklist:
+for url in linklist: ############################################## 7 in all, so done after [6:7]
   g.show("Retrieving " + url)
   response = urllib.request.urlopen(url)
   html = response.read().decode()
@@ -273,6 +274,8 @@ with open(rlefolder + "rledata.csv","w") as f:
     
     response = urllib.request.urlopen(url)
     html = response.read().decode()
+    while html.find("<!--")>-1:
+      html = html[:html.index("<!--")]+html[html.index("-->")+3:]  # new in 2.2
     
     # while trycount<6:
     #   try:
@@ -522,25 +525,34 @@ for pname in missing:
       g.show("No raw RLE for '" + pname + ".")
     else:
       start = html.index('name="wpTextbox1">')
-      rle = html[start+18:html.index('!',start+17)+1]
-      filename = outfolder + pname + ".rle"
-      data = pnamedict[pname]
-      discoverer, discoveryear = data[2], data[3]
-      sourceurl = data[0]
-      articlename = sourceurl.replace("https://conwaylife.com/w/index.php?title=","").replace("&action=edit","")
-      url = 'https://conwaylife.com/wiki/' + articlename
-      paturl = 'https://www.conwaylife.com/patterns/' + pname + ".rle"
-      with open(filename, 'w') as f:
-        f.write("#N "+pname+".rle\n")
-        if discoverer!="":
-          if discoveryear!="":
-            f.write("#O " + discoverer + ", " + discoveryear + "\n")
-          else:
-            f.write("#O " + discoverer + "\n")
-        f.write("#C " + url + "\n")
-        f.write("#C " + paturl + "\n")      
-        f.write(rle)
-      g.show("Wrote " + filename)
+      errorflag=0
+      try:
+        rle = html[start+18:html.index('!',start+17)+1]
+      except:
+        errorflag=1
+      if errorflag==1:
+        if html.find("REDIRECT")==-1:
+          g.setclipstr(html)
+          g.note("Problematic HTML copied to clipboard.")
+      else:
+        filename = outfolder + pname + ".rle"
+        data = pnamedict[pname]
+        discoverer, discoveryear = data[2], data[3]
+        sourceurl = data[0]
+        articlename = sourceurl.replace("https://conwaylife.com/w/index.php?title=","").replace("&action=edit","")
+        url = 'https://conwaylife.com/wiki/' + articlename
+        paturl = 'https://www.conwaylife.com/patterns/' + pname + ".rle"
+        with open(filename, 'w') as f:
+          f.write("#N "+pname+".rle\n")
+          if discoverer!="":
+            if discoveryear!="":
+              f.write("#O " + discoverer + ", " + discoveryear + "\n")
+            else:
+              f.write("#O " + discoverer + "\n")
+          f.write("#C " + url + "\n")
+          f.write("#C " + paturl + "\n")      
+          f.write(rle)
+        g.show("Wrote " + filename)
 
 # create files for any pattern syntheses that have raw RLE
 #   but can not be found on the server

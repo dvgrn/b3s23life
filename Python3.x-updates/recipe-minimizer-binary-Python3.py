@@ -1,4 +1,4 @@
-# recipe-minimizer-binary.py
+# recipe-minimizer-binary-Python3.py
 #
 # version 1: first Python3 version
 # version 2: remove requirement that a non-empty pattern is being constructed

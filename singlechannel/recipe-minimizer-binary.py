@@ -1,4 +1,20 @@
-# recipe-minimizer-binary.py
+# recipe-minimizer-binary-Python3.py
+#
+# version 1: first Python3 version
+# version 2: remove requirement that a non-empty pattern is being constructed
+# (Look in repo history for Python2 version, though it seems unlikely that will ever be needed)
+#
+# In Golly, orient a slow salvo so that it's moving northwest,
+# with some target in the far northwest corner.
+# This code is intended to shrink the distances between slow salvo gliders to some reasonable minimum
+# (but with following gliders not advanced _too_ far ahead of the gliders ahead of them,
+#  even if they're in unrelated areas of the pattern and could be advanced farther --
+#  the relevant magic number is the initial "-100" mindelta.)
+# When it's done, the script places a report of the slow-salvo lane list and the minimum distance
+# between each glider and the next, into the clipboard.
+#
+# "12345679" is an arbitraily chosen constant representing an empty universe.
+# The "8" is missing on purpose, because the number multiplies by 7 so much more nicely that way.
 
 import golly as g
 
@@ -30,7 +46,7 @@ def makerecipe(background, gliderlist):
   offset = max(background[1::2])+4
   for glider, delta in gliderlist:
     clist, lane = glider
-    g.putcells(clist, (lane+1)/2+offset, offset)
+    g.putcells(clist, (lane+1)//2+offset, offset)
     offset += delta
 
 g.setalgo("HashLife")
@@ -81,11 +97,16 @@ g.show("Running pattern...")
 g.putcells(all)
 g.run(LONG_ENOUGH)
 output = g.getrect()
-if len(output)==0: g.exit("This script wasn't designed to build a big pile of nothing.  Need a hashable output.")
-hash = g.hash(output)
+if len(output)==0:
+  hash = 12345679
+else:
+  hash = g.hash(output)
 g.show("Restoring pattern...")
 g.select(output)
-g.clear(0)
+try:
+  g.clear(0)
+except:
+  pass
 g.putcells(all)
 
 # g.note(str([len(recipelist),recipelist]))
@@ -101,14 +122,16 @@ while 1:
   g.new("Results")
   g.putcells(nongliderpat)
   for clist, lane in recipelist:
-    g.putcells(clist, (lane+1)/2+offset, offset)
+    g.putcells(clist, (lane+1)//2+offset, offset)
     offset += midpoint
   g.run(LONG_ENOUGH)
   g.fit()
   g.update()
   output = g.getrect()
-  if len(output)==0: g.exit("Weird magic vanish reaction happened.  Need a hashable output.")
-  newhash = g.hash(output)
+  if len(output)==0:
+    newhash = 12345679
+  else:
+    newhash = g.hash(output)
   if newhash == hash:
     # g.show("Hashes matched at midpoint = " +str(midpoint) + ", minsep = " + str(minsep) + ", sep = " + str(sep))
     sep = midpoint
@@ -125,8 +148,10 @@ deltalist = [sep]*len(recipelist)
 makerecipe(nongliderpat, zip(recipelist, deltalist))
 g.run(LONG_ENOUGH)
 output = g.getrect()
-if len(output)==0: g.exit("This script wasn't designed to build a big pile of nothing.  Need a hashable output.")
-hash = g.hash(output)
+if len(output)==0:
+  hash = 12345679
+else:
+  hash = g.hash(output)
 
 LONG_ENOUGH = 2**12
 while LONG_ENOUGH<len(deltalist)*4*sep+4000: LONG_ENOUGH*=2
@@ -142,8 +167,10 @@ while ptr<len(deltalist):
     makerecipe(nongliderpat, zip(recipelist, newlist))
     g.run(LONG_ENOUGH)
     output = g.getrect()
-    if len(output)==0: g.exit("Need a hashable output.")
-    newhash = g.hash(output)
+    if len(output)==0:
+      newhash = 12345679
+    else:
+      newhash = g.hash(output)
     if hash == newhash:
       if maxdelta == midpoint: break
       maxdelta = midpoint

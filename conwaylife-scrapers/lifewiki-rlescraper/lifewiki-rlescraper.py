@@ -1,4 +1,4 @@
-# lifewiki-rlescraper-v2.1.py
+# lifewiki-rlescraper-v2.3.py
 # Pretty much the only good thing about this code is that it works, and saves a
 #   considerable amount of admin time creating commented files for upload one by one.
 # The script does several things:
@@ -55,6 +55,8 @@
 # Version 2.2 (10 August 2022) somebody thought of putting a #REDIRECT in the RLE namespace,
 #                               so had to account for that case, and also <!-- ... --> comments
 #                               containing awkward keywords like "pname" and "discoverer"
+# Version 2.3 (2 October 2022) avoid (without really solving) mysterious problem with
+#                               RLE:uniquefatherproblemsolved
 # DONE:  add a check for {pname}_synth.rle,
 #        and create file for upload if not found in pattern collection
 # DONE:  using the above check of downloaded RLE files, create
@@ -63,6 +65,10 @@
 #        remove any comments, find the header line, load the file into Golly,
 #        check the pattern's bounding box, and export modified comments
 #        and the correct ASCII pattern if everything seems to be in order.
+# DONE:  look for and log error message that currently shows up only for uniquefatherproblemsolved
+#        "'utf-8' codec can't decode byte 0xf6 in position 44:
+#        invalid start byte for rle pname uniquefatherproblemsolved"
+#        and log this error but don't display it as a note.
 # TODO:  check the contents of {pname}.rle, {pname}_synth.rle, and {pname}.cells,
 #        and report all cases of discrepancies.  The human running the 
 #        script should ideally resolve all these differences, either by
@@ -85,7 +91,7 @@ import urllib.request
 import re
 import os
 
-samplepath = g.getstring("Enter path to generate .rle and .cells files","C:/users/{username}/Desktop/LW/")
+samplepath = g.getstring("Enter path to generate .rle and .cells files","C:/users/greedd/Desktop/LW/")
 if samplepath == "C:/users/{username}/Desktop/LW/":
   g.note("Please run this script again and change the sample path to something that works on your system.\n\n" \
        + "If the path you supply does not point to folders that you have permission to write to, " \
@@ -225,6 +231,7 @@ while 1:
 # and collect all the relevant article names on it
 ##################################################
 articlelist = []
+errorstring = ""
 for url in linklist: ############################################## 7 in all, so done after [6:7]
   g.show("Retrieving " + url)
   response = urllib.request.urlopen(url)
@@ -444,7 +451,7 @@ for item in sorted(pnamedict.keys()):
         missing += [item]
       # g.show(str(["Missing = ", len(missing), "Count = ", count]))
     else:
-      g.note(str(e) + " for rle pname " + item)
+      errorstring += "\nError '" + str(e) + "' for rle pname '" + item + "'"
 
   # check for an uploaded {pname}_synth.rle
   ###################### commented out at least temporarily to save time on the remaining scan
@@ -594,5 +601,5 @@ g.setclipstr(s + "\nCells files created: " + str(missingcells) + "\nPatterns too
                + "\napgcodes where LifeWiki synth is worse than Catagolue: " + str(apgcodesLWsynthworsethanC) \
                + "\napgcodes where LifeWiki synth exists but no Catagolue synth: " +str(apgcodesLWsynthbutnoCsynth) \
                + "\napgcodes where Catagolue synth exists but no LifeWiki synth: " +str(apgcodesnoLWsynthbutCsynth) \
-               )
+               + "\nErrors:" + errorstring )
 g.show("Exceptions written to clipboard. LW-scraper.py run complete.")

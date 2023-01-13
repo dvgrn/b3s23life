@@ -25,8 +25,8 @@ g.setrule("Life")
 
 count, minpop, minpat = 0, 999999, []
 for t in range(4):
-  for x in range(-20,60):
-    for y in range(0,4):
+  for x in range(-10,10):
+    for y in range(-20,40):
       g.new("Test " + str(count))
       count += 1
       g.putcells(pat1)

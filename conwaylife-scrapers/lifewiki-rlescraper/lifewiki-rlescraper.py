@@ -1,4 +1,4 @@
-# lifewiki-rlescraper-v2.3.py
+# lifewiki-rlescraper-v2.4.py
 # Pretty much the only good thing about this code is that it works, and saves a
 #   considerable amount of admin time creating commented files for upload one by one.
 # The script does several things:
@@ -57,6 +57,8 @@
 #                               containing awkward keywords like "pname" and "discoverer"
 # Version 2.3 (2 October 2022) avoid (without really solving) mysterious problem with
 #                               RLE:uniquefatherproblemsolved
+# Version 2.4 (2 February 2023) download textcensus of synthesis-costs in pieces, automatically
+
 # DONE:  add a check for {pname}_synth.rle,
 #        and create file for upload if not found in pattern collection
 # DONE:  using the above check of downloaded RLE files, create
@@ -78,7 +80,7 @@
 #        so that the plaintext link doesn't show up -- or redirect that link
 # TODO:  track down bug where a trailing comment after the RLE keeps the
 #        .cells pattern from being created (unless it's the lack of #N?)
-# TODO:  automate retrieval of synthesiscosts.txt, but only do it on specific
+# DONE:  automate retrieval of synthesis-costs.txt, but only do it on specific
 #        request (in response to getstring question) and update the local copy
 # TODO:  refactor the scanning system so that .cells files can be created
 #        at the same time as .rle to be uploaded (currently this takes two passes,
@@ -122,24 +124,68 @@ if not os.path.exists(patternsfile):
   g.note("No patterns file is present at '" + patternsfile + ".\n"
          + "Please copy and paste the contents of https://conwaylife.com/mod_delete_pattern.php"
          + "\ninto a new text file named patterns.txt, after logging in to https://conwaylife.com/mod.php .")
-         
-# first load synth costs from Catagolue into a dictionary
+
+def parse_csv(res):
+    return [tuple(s.replace('"', '').split(',')) for s in res.split('\n') if ',' in s][1:]
+
+def get_knowns(address, max_errors=8):
+    summary = urllib.request.urlopen(address + '/textcensus/b3s23/synthesis-costs/summary').read().decode()
+    tabs = [x for x in summary.split('\n') if ' tabulation ' in x]
+    tabs = [x.split(' tabulation ')[-1].strip() for x in tabs]
+    tabs = [x for x in tabs if x.startswith('x')]
+
+    knowns = [x for x in parse_csv(summary) if x[0].startswith('x')]
+    g.show('Initial length: %d' % len(knowns))
+
+    i = 0
+    j = 0
+    gm = 0.5 + 1.25 ** 0.5
+
+    while (i < len(tabs)):
+
+        t = tabs[i]
+        g.show('Downloading %s...' % t)
+
+        try:
+            res = urllib.request.urlopen(address + '/textcensus/b3s23/synthesis-costs/' + t).read().decode()
+            knowns += parse_csv(res)
+        except Exception as e:
+            g.note(e)
+            sleep(gm ** j) # exponential backoff
+            tabs.append(t)
+            j += 1
+
+        if (j > max_errors):
+            raise ValueError("%d errors have occurred; terminating..." % j)
+
+        i += 1
+
+    g.show('Final length: %d' % len(knowns))
+    return knowns
+
+resp = g.getstring("Download new synthesis-costs.txt?","Yes")
+if resp.lower()[:1]=="y":
+  synthcosts = get_knowns("https://catagolue.hatsya.com/")
+  with open(synthfile, "w") as f:
+    for item in synthcosts:
+      f.write(str(item) + "\n")
+    synthcosts = []
+    
+# load synth costs from the synthesis-costs file into a dictionary
+g.show("loading synth costs from the synthesis-costs file into a dictionary...")
 with open(synthfile,"r") as f:
-  foundheader = False
+  testedformat = False
   catapgcodes = {}
   for line in f:
-    if foundheader == False:
-      if line!='"apgcode","cost"\n':
-        # TODO:  automate retrieval of synthesiscosts.txt, but only do it on specific request, and update the local copy
-        g.exit("synthesiscosts.txt not in correct format.\nGet a copy of https://catagolue.appspot.com/textcensus/b3s23/synthesis-costs ." \
-               "It will be 10MB or more, so you may have to create a link\nto the file and download it directly, instead of opening it in a browser.")
-      foundheader = True
-      continue
+    if testedformat == False:
+      if not line.startswith("('"):
+        g.exit("synthesis-costs.txt not in correct format.")
+      testedformat = True
     if line.find(',')>-1:
-      apgcode, coststr = line.replace('"','').split(',')
+      apgcode, coststr = line[1:-2].replace("'","").replace(" ","").split(",")  # first slice removes parentheses and trailing newline
       if coststr[:9]=="100000000": coststr=coststr[1:]
       cost = int(coststr)
-      if cost == 999999999999999999: cost = -1
+      if cost == 999999999999999999: cost = -1  # apparently this doesn't happen in the current downloaded census
       catapgcodes[apgcode]=cost    
 
 # load dictionary of already uploaded patterns from conwaylife.com

@@ -1,4 +1,4 @@
-# lifewiki-rlescraper-v2.4.py
+# lifewiki-rlescraper-v2.5.py
 # Pretty much the only good thing about this code is that it works, and saves a
 #   considerable amount of admin time creating commented files for upload one by one.
 # The script does several things:
@@ -58,6 +58,7 @@
 # Version 2.3 (2 October 2022) avoid (without really solving) mysterious problem with
 #                               RLE:uniquefatherproblemsolved
 # Version 2.4 (2 February 2023) download textcensus of synthesis-costs in pieces, automatically
+# Version 2.5 (2 March 2023) remove test for synthesis-costs file, separate report for LifeHistory
 
 # DONE:  add a check for {pname}_synth.rle,
 #        and create file for upload if not found in pattern collection
@@ -97,7 +98,7 @@ samplepath = g.getstring("Enter path to generate .rle and .cells files","C:/user
 if samplepath == "C:/users/{username}/Desktop/LW/":
   g.note("Please run this script again and change the sample path to something that works on your system.\n\n" \
        + "If the path you supply does not point to folders that you have permission to write to, " \
-       + "or if synthfile is not present, the data collection process will eventually fail with an error.")
+       + "the data collection process will eventually fail with an error.")
   g.exit()
 
 outfolder = samplepath + "rle/"
@@ -114,11 +115,6 @@ if not os.path.exists(samplepath):
     os.makedirs(cellsfolder)
     os.makedirs(rlefolder)
     os.makedirs(synthfolder)
-if not os.path.exists(synthfile):
-  g.note("No synthfile is present at '" + synthfile + ".\n"
-       + "Please download this file from\nhttps://catagolue.appspot.com/textcensus/b3s23/synthesis-costs ."
-       + "\nOpen the file 'link.txt' in the lifewiki-rlescraper repository and follow instructions to download.")
-  g.exit()
 
 if not os.path.exists(patternsfile):
   g.note("No patterns file is present at '" + patternsfile + ".\n"
@@ -163,7 +159,10 @@ def get_knowns(address, max_errors=8):
     g.show('Final length: %d' % len(knowns))
     return knowns
 
-resp = g.getstring("Download new synthesis-costs.txt?","Yes")
+if not os.path.exists(synthfile):
+  resp = "y"
+else:
+  resp = g.getstring("Download new synthesis-costs.txt?","Yes")
 if resp.lower()[:1]=="y":
   synthcosts = get_knowns("https://catagolue.hatsya.com/")
   with open(synthfile, "w") as f:
@@ -427,7 +426,7 @@ with open(rlefolder + "rledata.csv","w") as f:
 # go through dictionary of all pnames found, looking for
 # raw RLE for either pattern or synthesis or .cells
 ########################################################
-missing, missingsynth, missingcells, toobigforcells = [], [], [], []
+missing, missingsynth, missingcells, toobigforcells, actualcells, notcreatedcells = [], [], [], [], [], []
 count = 0
 # g.note("Starting check of pnames")
 for item in sorted(pnamedict.keys()):
@@ -552,6 +551,9 @@ for item in sorted(pnamedict.keys()):
                 ascii+="\n"
               with open(cellsfolder + item + ".cells","w") as f:
                 f.write(ascii)
+              actualcells += [item]
+            else:
+              notcreatedcells += [item]
           else:  # width and/or height are too big
             toobigforcells += [item]
             # remove from the list of articles that could have cells files but don't
@@ -639,7 +641,8 @@ for pname in missingsynth:
     g.show("Wrote " + filename)
 
 g.note("Done!  Click OK to write exceptions to clipboard.")
-g.setclipstr(s + "\nCells files created: " + str(missingcells) + "\nPatterns too big to create cells files, or multistate: " + str(toobigforcells) \
+g.setclipstr(s + "\nPotential .cells files: " + str(missingcells) + "\n.cells files actually written: " + str(actualcells) \
+               + "\nMultistate RLE, so no .cells file: " + str(notcreatedcells) + "\nPatterns too big to create cells files, or multistate: " + str(toobigforcells) \
                + "\nIllegal capitalized pnames: " + str(capitalizedpnames) + "\npnames with no RLE header: " + str(noRLEheader) \
                + "\nNo RLE param in infobox: " + str(norleparam) + "\nNo plaintext param in infobox: " + str(noplaintextparam) \
                + "\napgcodes where LifeWiki synth agrees with Catagolue: " + str(apgcodesLWsynthagreeswithC) \

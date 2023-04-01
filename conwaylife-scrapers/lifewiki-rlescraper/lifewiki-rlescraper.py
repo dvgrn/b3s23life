@@ -1,4 +1,4 @@
-# lifewiki-rlescraper-v2.5.py
+# lifewiki-rlescraper-v2.6.py
 # Pretty much the only good thing about this code is that it works, and saves a
 #   considerable amount of admin time creating commented files for upload one by one.
 # The script does several things:
@@ -59,6 +59,7 @@
 #                               RLE:uniquefatherproblemsolved
 # Version 2.4 (2 February 2023) download textcensus of synthesis-costs in pieces, automatically
 # Version 2.5 (2 March 2023) remove test for synthesis-costs file, separate report for LifeHistory
+# Version 2.6 (1 April 2023) fix crash related to error about xp2 census on Catagolue (now oversized)
 
 # DONE:  add a check for {pname}_synth.rle,
 #        and create file for upload if not found in pattern collection
@@ -93,6 +94,7 @@ import golly as g
 import urllib.request
 import re
 import os
+from time import sleep
 
 samplepath = g.getstring("Enter path to generate .rle and .cells files","C:/users/greedd/Desktop/LW/")
 if samplepath == "C:/users/{username}/Desktop/LW/":
@@ -124,7 +126,7 @@ if not os.path.exists(patternsfile):
 def parse_csv(res):
     return [tuple(s.replace('"', '').split(',')) for s in res.split('\n') if ',' in s][1:]
 
-def get_knowns(address, max_errors=8):
+def get_knowns(address, max_errors=2):
     summary = urllib.request.urlopen(address + '/textcensus/b3s23/synthesis-costs/summary').read().decode()
     tabs = [x for x in summary.split('\n') if ' tabulation ' in x]
     tabs = [x.split(' tabulation ')[-1].strip() for x in tabs]
@@ -143,17 +145,19 @@ def get_knowns(address, max_errors=8):
         g.show('Downloading %s...' % t)
 
         try:
-            res = urllib.request.urlopen(address + '/textcensus/b3s23/synthesis-costs/' + t).read().decode()
+            addr = address + '/textcensus/b3s23/synthesis-costs/' + t
+            res = urllib.request.urlopen(addr).read().decode()
             knowns += parse_csv(res)
         except Exception as e:
-            g.note(e)
+            g.note(str(e) + "\n" + addr)
             sleep(gm ** j) # exponential backoff
             tabs.append(t)
             j += 1
 
         if (j > max_errors):
-            raise ValueError("%d errors have occurred; terminating..." % j)
-
+            # raise ValueError("%d errors have occurred; terminating..." % j)
+            g.note("%d errors have occurred; terminating...\nFix any remaining problems manually.\nError is in '%s'." % (j, i))
+            tabs.pop()
         i += 1
 
     g.show('Final length: %d' % len(knowns))

@@ -1,4 +1,4 @@
-# lifewiki-rlescraper-v2.6.py
+# lifewiki-rlescraper-v2.7.py
 # Pretty much the only good thing about this code is that it works, and saves a
 #   considerable amount of admin time creating commented files for upload one by one.
 # The script does several things:
@@ -60,6 +60,7 @@
 # Version 2.4 (2 February 2023) download textcensus of synthesis-costs in pieces, automatically
 # Version 2.5 (2 March 2023) remove test for synthesis-costs file, separate report for LifeHistory
 # Version 2.6 (1 April 2023) fix crash related to error about xp2 census on Catagolue (now oversized)
+# Version 2.7 (2 June 2023) download compressed versions of synth costs
 
 # DONE:  add a check for {pname}_synth.rle,
 #        and create file for upload if not found in pattern collection
@@ -92,9 +93,12 @@
 
 import golly as g
 import urllib.request
+from urllib.request import urlopen, Request
 import re
 import os
 from time import sleep
+import base64
+import gzip
 
 samplepath = g.getstring("Enter path to generate .rle and .cells files","C:/users/greedd/Desktop/LW/")
 if samplepath == "C:/users/{username}/Desktop/LW/":
@@ -145,9 +149,10 @@ def get_knowns(address, max_errors=2):
         g.show('Downloading %s...' % t)
 
         try:
-            addr = address + '/textcensus/b3s23/synthesis-costs/' + t
-            res = urllib.request.urlopen(addr).read().decode()
-            knowns += parse_csv(res)
+            addr = address + '/textcensus/b3s23/synthesis-costs/' + t + '/compressed'
+            res = urlopen(addr).read()
+            res = gzip.decompress(base64.b64decode(res)).decode()
+            knowns += [s.split(' ') for s in res.split('\n') if ' ' in s]
         except Exception as e:
             g.note(str(e) + "\n" + addr)
             sleep(gm ** j) # exponential backoff
